@@ -1,19 +1,21 @@
-import './HomePage.css';
 import { Link, Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
 import {useHistory} from 'react-router-dom';
+import { PageLayout } from '../../components/PageLayout/PageLayout';
 
 function HomePage() {
     let history = useHistory();
 
-    return (
-        <Flex
-            direction='column'
-            justify='center'
-            align='center'
-            width='100vw' 
-            height='100vh'
-            background='#EBF8FF'
+    const repoLink = <Link 
+            textDecoration='underline' 
+            isExternal 
+            href='https://github.com/MaximoMachado/spotify-playlist-manager' 
+            _hover={{color: '#A0AEC0', textDecoration: 'none'}}
         >
+            Github Repo
+        </Link>;
+
+    return (
+        <PageLayout>
             <Text visibility='hidden' marginBottom='auto' align='center'></Text>
             <Flex direction='column' align='center' height='25%'>
                 <Heading align='center'>Spotify Playlist Manager</Heading>
@@ -24,15 +26,15 @@ function HomePage() {
                 <Spacer />
                 <Button
                     boxShadow='md'
-                    onClick={() => history.goBack()}
+                    onClick={() => history.push('/tools')}
                 >
                     Log In With Spotify
                 </Button>
             </Flex>
             <Text marginTop='auto' paddingBottom='1em' align='center'> 
-                Maximo Machado | maximo@mit.edu | <Link textDecoration='underline' isExternal href='https://github.com/MaximoMachado/spotify-playlist-manager'>Github Repo</Link> 
+                Maximo Machado | maximo@mit.edu | {repoLink}
             </Text>
-        </Flex>
+        </PageLayout>
     );
 }
 

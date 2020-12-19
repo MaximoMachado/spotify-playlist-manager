@@ -1,21 +1,15 @@
-import './NotFound.css';
 import { Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import {PageLayout} from '../../components/PageLayout/PageLayout';
 
 function NotFound() {
     let history = useHistory();
 
     return (
-        <Flex 
-            justify='center' 
-            align='center' 
-            width='100vw' 
-            height='100vh'
-            background='#EBF8FF'
-        >
+        <PageLayout>
             <Flex direction='column' align='center' height='25%'>
-                <Heading>Error 404</Heading>
-                <Text>Sorry! The page you were looking for doesn't exist.</Text>
+                <Heading align='center'>Error 404</Heading>
+                <Text align='center'>Sorry! The page you were looking for doesn't exist.</Text>
 
                 <Spacer />
                 <Button
@@ -25,7 +19,7 @@ function NotFound() {
                     Return to Previous Page
                 </Button>
             </Flex>
-        </Flex>
+        </PageLayout>
     )
 }
 
