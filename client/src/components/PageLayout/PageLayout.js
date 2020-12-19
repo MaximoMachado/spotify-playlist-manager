@@ -2,7 +2,7 @@ import { propNames } from "@chakra-ui/react";
 import {Flex} from '@chakra-ui/react';
 
 
-function PageLayout({ children }) {
+function PageLayout({ children, ...style }) {
 
     return (
         <Flex
@@ -12,6 +12,7 @@ function PageLayout({ children }) {
             width='100vw' 
             height='100vh'
             background='#EBF8FF'
+            {...style}
         >
             {children}
         </Flex>

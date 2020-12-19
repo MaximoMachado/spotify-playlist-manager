@@ -22,10 +22,16 @@ function Tools() {
                     path='/multiple-playlist-searcher'
                 />
                 <Tool 
+                    title='True Random Shuffle (WIP)'
+                    desc='Creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.'
+                    path='/true-random-shuffle'
+                />
+                <Tool 
                     title='Playlist Set Operations (WIP)'
                     desc='This tool creates a new playlist based on two or more other playlists using set operations, i.e. an intersection would create a playlist containing only songs that are in both playlists.'
                     path='/playlist-set-operations'
                 />
+                
             </VStack>
         </PageLayout>
     );

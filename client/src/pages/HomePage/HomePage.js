@@ -20,9 +20,9 @@ function HomePage() {
             <Flex direction='column' align='center' height='25%'>
                 <Heading align='center'>Spotify Playlist Manager</Heading>
                 <Spacer />
-                <Text align='center'>A collection of different tools related to playlist management and creation.</Text>
+                <Text align='center'>Tool for power users to manipulate and utilize Spotify playlists in new and unique ways.</Text>
                 <Spacer />
-                <Text align='center'>Some examples include checking if a song is in saved playlists and set operations on playlists.</Text>
+                <Text align='center'>Some examples include set operations on playlists and truly random playlist shuffling.</Text>
                 <Spacer />
                 <Button
                     boxShadow='md'
