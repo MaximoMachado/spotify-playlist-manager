@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 var spotifyApi = require('./spotifyApi');
 
 var authRouter = require('./routes/auth');
@@ -13,9 +14,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api/auth', authRouter);
+app.use(cors({
+    origin: process.env.ORIGIN_URL,
+    credentials: true
+}));
 
-app.get('/api/users/playlists', (req, res) => {
+app.use('/auth', authRouter);
+
+app.get('/users/playlists', (req, res) => {
     spotifyApi.getMe()
         .then(data => {
             const user = data.body;
