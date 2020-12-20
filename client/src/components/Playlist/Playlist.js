@@ -8,7 +8,7 @@ function Playlist({ playlistData, ...style}) {
     useEffect(() => {
         const data = playlistData;
 
-        const images = data.images.map(image => `${image.url} ${image.width}`).join(', ');
+        const images = data.images.map(image => `${image.url} ${image.width}w`).join(', ');
 
         setPlaylist({
             ...data,
@@ -19,7 +19,14 @@ function Playlist({ playlistData, ...style}) {
 
     return (
         <Flex {...style}>
-            <Image srcSet={playlist.images}/>
+            <Image
+                alignSelf='center'
+                height='90%'
+                width='15%'
+                marginRight='10px'
+                srcSet={playlist.images}
+                fallbackSrc={`${process.env.REACT_APP_PUBLIC_URL}/no-image.png`}
+            />
             <Box>
                 <Heading as='a' href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}>
                     {playlist.name}
