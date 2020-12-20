@@ -8,8 +8,8 @@ function PageLayout({ children, ...style }) {
             direction='column'
             justify='center'
             align='center'
-            minWidth='100vw' 
-            minHeight='100vh'
+            width='100vw' 
+            height='100vh'
             background='#EBF8FF'
             {...style}
         >
