@@ -1,20 +1,12 @@
-import { Heading, VStack, StackDivider } from "@chakra-ui/react";
+import { Heading, } from "@chakra-ui/react";
 import { PageLayout } from "../../components/PageLayout/PageLayout";
+import { StyledVStack } from "../../components/StyledVStack/StyledVStack";
 import { Tool } from "../../components/Tool/Tool";
 
 function Tools() {
     return (
         <PageLayout>
-            <VStack 
-                height={['100%', 'auto', 'auto', 'auto']}
-                width={['100%', '75%', '50%', '50%']}
-                padding={5} 
-                spacing={15} 
-                shadow='md' 
-                align='flex-start'
-                background='#F7FAFC' 
-                divider={<StackDivider borderColor="#2D3748" />}
-            >
+            <StyledVStack >
                 <Heading color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
                 <Tool 
                     title='Multiple Playlist Searcher (WIP)'
@@ -32,7 +24,7 @@ function Tools() {
                     path='/playlist-set-operations'
                 />
                 
-            </VStack>
+            </StyledVStack>
         </PageLayout>
     );
 }
