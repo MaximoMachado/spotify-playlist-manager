@@ -1,16 +1,8 @@
 import { Link, Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
+import { ExternalHyperLink } from '../../components/ExternalHyperLink/ExternalHyperLink';
 import { PageLayout } from '../../components/PageLayout/PageLayout';
 
 function HomePage() {
-    const repoLink = <Link 
-            textDecoration='underline' 
-            isExternal 
-            href='https://github.com/MaximoMachado/spotify-playlist-manager' 
-            _hover={{color: '#A0AEC0', textDecoration: 'none'}}
-        >
-            Github Repo
-        </Link>;
-
     return (
         <PageLayout>
             <Text visibility='hidden' marginBottom='auto' align='center'></Text>
@@ -30,7 +22,7 @@ function HomePage() {
                 </Button>
             </Flex>
             <Text marginTop='auto' paddingBottom='1em' align='center'> 
-                Maximo Machado | maximo@mit.edu | {repoLink}
+                Maximo Machado | maximo@mit.edu | <ExternalHyperLink href='https://github.com/MaximoMachado/spotify-playlist-manager'>Github Repo</ExternalHyperLink>
             </Text>
         </PageLayout>
     );

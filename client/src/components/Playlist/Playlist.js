@@ -31,7 +31,7 @@ function Playlist({ playlistData, ...style}) {
             <Box>
                 <ExternalHyperLink 
                     component={Heading}
-                    externalUrl={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}
+                    href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}
                 >
                     {playlist.name}
                 </ExternalHyperLink>
