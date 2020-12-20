@@ -9,7 +9,11 @@ function Playlist({ playlistData, ...style}) {
     useEffect(() => {
         const data = playlistData;
 
-        const images = data.images.map(image => `${image.url} ${image.width}w`).join(', ');
+        const images = data.images.map(image => {
+                const imageWidth = (image.width !== null) ? ` ${image.width}w` : '';
+
+                return `${image.url}${imageWidth}`
+            }).join(', ');
 
         setPlaylist({
             ...data,

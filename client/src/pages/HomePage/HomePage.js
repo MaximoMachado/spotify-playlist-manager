@@ -1,4 +1,4 @@
-import { Link, Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
+import { Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
 import { ExternalHyperLink } from '../../components/ExternalHyperLink/ExternalHyperLink';
 import { PageLayout } from '../../components/PageLayout/PageLayout';
 

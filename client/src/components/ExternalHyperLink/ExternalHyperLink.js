@@ -1,6 +1,6 @@
 import {Link} from '@chakra-ui/react';
 
-function ExternalHyperLink({ component, children, href, ...style }) {
+function ExternalHyperLink({ component=<div/> , children, href, ...style }) {
 
     return (
         <component {...style}>
