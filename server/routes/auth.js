@@ -16,12 +16,11 @@ router.get('/callback', async (req, res) => {
   
     if (error) {
         console.error('Callback Error:', error);
-        res.send(`Callback Error: ${error}`);
+        res.redirect(`${process.env.ORIGIN_URL}`);
         return;
     }
   
-    spotifyApi
-        .authorizationCodeGrant(code)
+    spotifyApi.authorizationCodeGrant(code)
         .then(data => {
             const access_token = data.body['access_token'];
             const refresh_token = data.body['refresh_token'];
@@ -36,7 +35,7 @@ router.get('/callback', async (req, res) => {
             console.log(
                 `Sucessfully retreived access token. Expires in ${expires_in} s.`
             );
-            res.send("You're good to go! Close the window and enjoy the website. :)");
+            res.redirect(`${process.env.ORIGIN_URL}/tools`);
 
             setInterval(async () => {
                 const data = await spotifyApi.refreshAccessToken();
@@ -49,7 +48,7 @@ router.get('/callback', async (req, res) => {
         })
         .catch(error => {
             console.error('Error getting Tokens:', error);
-            res.send(`Error getting Tokens: ${error}`);
+            res.redirect(`${process.env.ORIGIN_URL}`);
         });
 });
 

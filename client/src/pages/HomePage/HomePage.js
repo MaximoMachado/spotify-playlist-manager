@@ -1,11 +1,7 @@
-import axios from 'axios';
 import { Link, Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
 import { PageLayout } from '../../components/PageLayout/PageLayout';
 
 function HomePage() {
-    let history = useHistory();
-
     const repoLink = <Link 
             textDecoration='underline' 
             isExternal 
@@ -14,14 +10,6 @@ function HomePage() {
         >
             Github Repo
         </Link>;
-
-    const handleAuth = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/auth/login`, { withCredentials: true })
-            .then(res => {
-                history.push('/tools');
-            })
-            .catch(err => console.log(err))
-    };
 
     return (
         <PageLayout>
@@ -34,8 +22,9 @@ function HomePage() {
                 <Text align='center'>Some examples include set operations on playlists and truly random playlist shuffling.</Text>
                 <Spacer />
                 <Button
+                    as='a'
                     boxShadow='md'
-                    onClick={handleAuth}
+                    href={`${process.env.REACT_APP_API_URL}/auth/login`}
                 >
                     Log In With Spotify
                 </Button>
