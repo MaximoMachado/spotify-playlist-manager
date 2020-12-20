@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { Link, Flex, Spacer, Heading, Text, Button } from '@chakra-ui/react';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { PageLayout } from '../../components/PageLayout/PageLayout';
 
 function HomePage() {
@@ -14,6 +15,14 @@ function HomePage() {
             Github Repo
         </Link>;
 
+    const handleAuth = () => {
+        axios.get(`${process.env.REACT_APP_API_URL}/auth/login`, { withCredentials: true })
+            .then(res => {
+                history.push('/tools');
+            })
+            .catch(err => console.log(err))
+    };
+
     return (
         <PageLayout>
             <Text visibility='hidden' marginBottom='auto' align='center'></Text>
@@ -26,7 +35,7 @@ function HomePage() {
                 <Spacer />
                 <Button
                     boxShadow='md'
-                    onClick={() => history.push('/tools')}
+                    onClick={handleAuth}
                 >
                     Log In With Spotify
                 </Button>

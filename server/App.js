@@ -14,9 +14,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+const whitelist = [process.env.ORIGIN_URL, 'https://accounts.spotify.com']
+
 app.use(cors({
-    origin: process.env.ORIGIN_URL,
-    credentials: true
+    credentials: true,
+    origin: (origin, callback) => {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    
 }));
 
 app.use('/auth', authRouter);

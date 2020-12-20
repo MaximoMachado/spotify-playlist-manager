@@ -26,3 +26,5 @@
 
 # Env Files
 /server/.env
+/client/.env
+*/.env
