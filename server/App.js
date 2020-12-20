@@ -2,7 +2,6 @@ var createError = require('http-errors');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var axios = require('axios');
 
 var usersRouter = require('./routes/users');
 
@@ -19,30 +18,7 @@ app.use('/api/users', usersRouter);
 
 // Callback to handle Spotify Login Request
 app.get('/api/callback', async (req, res) => {
-    const code = req.query.code || null;
-    const error = req.query.error || null;
-
-    if (code !== null) {
-        // User accepted permissions
-        const tokenRes = await axios.post('https://accounts.spotify.com/api/token', 
-            {
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: process.env.REDIRECT_URI,
-            },
-            { 
-                params: { 
-                    client_id: process.env.CLIENT_ID, 
-                    client_secret: process.env.CLIENT_SECRET 
-                } 
-            });
-
-
-    } else {
-        // Error
-
-        res.redirect(process.env.FRONT_END_URL);
-    }
+    
 });
 
 // catch 404 and forward to error handler
