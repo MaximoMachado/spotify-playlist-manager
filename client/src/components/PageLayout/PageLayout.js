@@ -1,4 +1,3 @@
-import { propNames } from "@chakra-ui/react";
 import {Flex} from '@chakra-ui/react';
 
 

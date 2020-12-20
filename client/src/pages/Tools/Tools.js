@@ -1,5 +1,6 @@
 import { Heading, VStack, StackDivider } from "@chakra-ui/react";
 import { PageLayout } from "../../components/PageLayout/PageLayout";
+import { SpotifyAvatar } from "../../components/SpotifyAvatar/SpotifyAvatar";
 import { Tool } from "../../components/Tool/Tool";
 
 function Tools() {
@@ -15,6 +16,7 @@ function Tools() {
                 background='#F7FAFC' 
                 divider={<StackDivider borderColor="#2D3748" />}
             >
+                <SpotifyAvatar />
                 <Heading color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
                 <Tool 
                     title='Multiple Playlist Searcher (WIP)'

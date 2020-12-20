@@ -6,6 +6,7 @@ var cors = require('cors');
 var spotifyApi = require('./spotifyApi');
 
 var authRouter = require('./routes/auth');
+var spotifyRouter = require('./routes/spotify');
 
 var app = express();
 
@@ -21,19 +22,7 @@ app.use(cors({
 
 app.use('/auth', authRouter);
 
-app.get('/users/playlists', (req, res) => {
-    spotifyApi.getMe()
-        .then(data => {
-            const user = data.body;
-
-            spotifyApi.getUserPlaylists(user.id)
-                .then(playlists => {
-                    res.send(playlists);
-                })
-                .catch(err => console.log(err))
-        })
-        .catch(err => console.log(err))
-});
+app.use('/spotify', spotifyRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
