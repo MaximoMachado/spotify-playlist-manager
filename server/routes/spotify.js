@@ -3,6 +3,9 @@ var router = express.Router();
 var spotifyApi = require('../spotifyApi');
 
 router.get('/:func', (req, res) => {
+    /**
+     * Allows any Spotify API function to be called that takes in no arguments and returns data.
+     */
     const { func } = req.params;
 
     spotifyApi[func]()

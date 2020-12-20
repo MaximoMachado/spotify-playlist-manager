@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var spotifyApi = require('../spotifyApi');
 
-// Authentication
+// Authentication with Spotify API
 router.get('/login', (req, res) => {
     const scopes = ['playlist-modify-public', 'playlist-modify-private', 'playlist-read-private', 'playlist-read-collaborative'];
 
