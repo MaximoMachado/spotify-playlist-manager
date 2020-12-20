@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import { HomePage } from './pages/HomePage/HomePage';
 import { NotFound } from './pages/NotFound/NotFound';
 import { Tools } from './pages/Tools/Tools';
+import { MultiplePlaylistSearcher } from './pages/MultiplePlaylistSearcher/MultiplePlaylistSearcher';
 
 function App() {
     return (
@@ -10,6 +11,11 @@ function App() {
             <Switch>
                 <Route exact path='/'><HomePage /></Route>
                 <Route path='/tools'><Tools /></Route>
+
+                <Route path='/multiple-playlist-searcher'><MultiplePlaylistSearcher /></Route>
+                <Route path='/true-random-shuffle'><NotFound /></Route>
+                <Route path='/playlist-set-operations'><NotFound /></Route>
+
                 <Route path='*'><NotFound /></Route>
             </Switch>
         </Router>

@@ -5,23 +5,23 @@ function Playlist({ playlistData, ...style}) {
 
     const [playlist, setPlaylist] = useState({});
 
-    useEffect( () => {
-        const data = playlistData.data.body;
+    useEffect(() => {
+        const data = playlistData;
 
-        const image = (data.images.length > 0) ? data.images[0] : '';
+        const images = data.images.map(image => `${image.url} ${image.width}`).join(', ');
 
         setPlaylist({
             ...data,
-            image: image,
+            images: images,
         });
 
-    }, [playlistData])
+    }, [])
 
     return (
         <Flex {...style}>
-            <Image src={playlist.image}/>
+            <Image srcSet={playlist.images}/>
             <Box>
-                <Heading as='a' href={playlist.external_urls.spotify}>
+                <Heading as='a' href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}>
                     {playlist.name}
                 </Heading>
                 <Text>
