@@ -5,6 +5,16 @@ import {PageLayout} from '../../components/PageLayout/PageLayout';
 function NotFound() {
     let history = useHistory();
 
+    const handleReturn = () => {
+
+        if (history.length >= 1) {
+            history.goBack();
+        } else {
+            history.push('/');
+        }
+
+    }
+
     return (
         <PageLayout>
             <Flex direction='column' align='center' height='25%'>
@@ -14,7 +24,7 @@ function NotFound() {
                 <Spacer />
                 <Button
                     boxShadow='md'
-                    onClick={() => history.goBack()}
+                    onClick={handleReturn}
                 >
                     Return to Previous Page
                 </Button>
