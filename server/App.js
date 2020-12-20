@@ -2,8 +2,9 @@ var createError = require('http-errors');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var spotifyApi = require('./spotifyApi');
 
-var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -12,13 +13,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Routes
-app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
 
+app.get('/api/users/playlists', (req, res) => {
+    spotifyApi.getMe()
+        .then(data => {
+            const user = data.body;
 
-// Callback to handle Spotify Login Request
-app.get('/api/callback', async (req, res) => {
-    
+            spotifyApi.getUserPlaylists(user.id)
+                .then(playlists => {
+                    res.send(playlists);
+                })
+                .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
 });
 
 // catch 404 and forward to error handler
