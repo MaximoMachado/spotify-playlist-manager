@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var spotifyApi = require('../spotifyApi');
-var { getPagedPlaylists, getPagedTracks } = require('../utils/getPagedItems');
 
 router.get('/:func', (req, res) => {
     /**
@@ -18,33 +17,51 @@ router.get('/:func', (req, res) => {
         })
 });
 
-router.get('/search/playlists/:uri', (req, res) => {
+router.get('/search/playlists/:uri', async (req, res) => {
     const { uri } = req.params;
-    console.log('Uri: ' + uri);
 
     const matchingPlaylists = [];
 
-    spotifyApi.getMe()
-        .then(data => {
-            const { id } = data.body;
-            
-            getPagedPlaylists(id, playlist => {
-                const { id } = playlist;
-                
-                getPagedTracks(id, playlistTrack => {
-                    const { track } = playlistTrack;
+    let limit = 50;
+    let offset = 0;
+    let total = null;
+    do {
+        const playlistsData = await spotifyApi.getUserPlaylists({limit: limit, offset: offset});
+        if (total === null) {
+            total = playlistsData.body.total;
+        }
 
-                    if (uri === track.uri) {
-                        matchingPlaylists.push(playlist);
-                        return true;
+        let playlists = playlistsData.body.items;
+        for (let i = 0; i < playlists.length; i++) {
+            let playlist = playlists[i];
+            console.log(playlist.name);
+            let trackLimit = 100;
+            let trackOffset = 0;
+            let trackTotal = null;
+
+            do {
+                let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
+                let tracks = tracksData.body.items;
+
+                if (trackTotal === null) {
+                    trackTotal = tracksData.body.total;
+                }
+
+                for (let j = 0; j < tracks.length; j++) {
+                    let track = tracks[j].track;
+                    if (track.uri === uri) {
+                        console.log('Found');
+                        matchingPlaylists.push(playlist)
                     }
-                    return false;
-                })
+                }
 
-                return false;
-            });
-        })
-        .catch(err => console.error(err))
+                trackOffset += trackLimit;
+            } while (trackTotal === null || trackOffset < trackTotal);
+        }
+
+        offset += limit;
+    } while (total === null || offset < total);
+
 
     res.send(matchingPlaylists);
 });
