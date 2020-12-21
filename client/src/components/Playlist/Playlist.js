@@ -20,7 +20,6 @@ function Playlist({ playlistData, fullInfo=true, ...style}) {
             ...data,
             images: images,
         });
-
     }, [playlistData])
 
     return (
@@ -33,16 +32,19 @@ function Playlist({ playlistData, fullInfo=true, ...style}) {
                 srcSet={playlist.images}
                 fallbackSrc={`${process.env.REACT_APP_PUBLIC_URL}/no-image.png`}
             />
-            <Box>
+            <Flex flexDirection='column' justifyContent='space-between'>
                 <ExternalHyperLink href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}>
                     <Heading>{playlist.name}</Heading>
                 </ExternalHyperLink>
                 <Text>
                     {playlist.description}
                 </Text>
-            </Box>
+                <Text>
+                    Created by {(playlist.owner !== undefined) ? playlist.owner.display_name : null}
+                </Text>
+            </Flex>
         </Flex>
-    )
+    );
 }
 
 export {Playlist};
