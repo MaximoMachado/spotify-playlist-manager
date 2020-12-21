@@ -20,7 +20,7 @@ function Playlist({ playlistData, ...style}) {
             images: images,
         });
 
-    }, [])
+    }, [playlistData])
 
     return (
         <Flex {...style}>
