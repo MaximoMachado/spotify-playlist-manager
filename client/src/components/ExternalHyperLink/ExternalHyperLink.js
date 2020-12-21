@@ -1,19 +1,17 @@
 import {Link} from '@chakra-ui/react';
 
-function ExternalHyperLink({ component=<div/> , children, href, ...style }) {
-
+function ExternalHyperLink({ children, href, ...style }) {
     return (
-        <component {...style}>
-            <Link
-                color='#4299E1'
-                textDecoration='underline'
-                _hover={{ color: '#2C5282', textDecoration: 'none'}}
-                href={href}
-                isExternal
-            >
-                {children}
-            </Link>
-        </component>
+        <Link
+            color='blue.400'
+            textDecoration='underline'
+            _hover={{ textDecoration: 'none', color: 'blue.700' }}
+            href={href}
+            isExternal
+            {...style}
+        >
+            {children}
+        </Link>
     )
 }
 

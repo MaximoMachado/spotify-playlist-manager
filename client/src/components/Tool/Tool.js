@@ -1,10 +1,8 @@
 import { Box, Heading, Text, Link } from "@chakra-ui/react";
-import { useHistory } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 
 function Tool({ title, desc, path, ...style }) {
-    let history = useHistory();
-
     return (
         <Box 
             padding={5}
@@ -14,8 +12,9 @@ function Tool({ title, desc, path, ...style }) {
                 <Link
                     color='#4299E1'
                     textDecoration='underline'
-                    _hover={{ color: '#2C5282', textDecoration: 'none'}}
-                    onClick={() => history.push(path)}
+                    _hover={{ textDecoration: 'none', color: 'blue.700' }}
+                    as={RouterLink}
+                    to={path}
                 >
                     {title}
                 </Link>

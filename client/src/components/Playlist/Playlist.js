@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Flex, Image, Box, Heading, Text } from '@chakra-ui/react';
 import { ExternalHyperLink } from '../ExternalHyperLink/ExternalHyperLink';
 
-function Playlist({ playlistData, ...style}) {
+function Playlist({ playlistData, fullInfo=true, ...style}) {
 
     const [playlist, setPlaylist] = useState({});
 
@@ -33,11 +33,8 @@ function Playlist({ playlistData, ...style}) {
                 fallbackSrc={`${process.env.REACT_APP_PUBLIC_URL}/no-image.png`}
             />
             <Box>
-                <ExternalHyperLink 
-                    component={Heading}
-                    href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}
-                >
-                    {playlist.name}
+                <ExternalHyperLink href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}>
+                    <Heading>{playlist.name}</Heading>
                 </ExternalHyperLink>
                 <Text>
                     {playlist.description}
