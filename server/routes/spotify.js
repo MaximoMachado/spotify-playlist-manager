@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var spotifyApi = require('../spotifyApi');
+var { getPagedPlaylists, getPagedTracks } = require('../utils/getPagedItems');
 
 router.get('/:func', (req, res) => {
     /**
@@ -15,6 +16,36 @@ router.get('/:func', (req, res) => {
         .catch(err => {
             console.error(err);
         })
+});
+
+router.get('/search/playlists/:uri', (req, res) => {
+    const { uri } = req.params;
+
+    const matchingPlaylists = [];
+
+    spotifyApi.getMe()
+        .then(data => {
+            const { id } = data.body;
+
+            getPagedPlaylists(id, playlist => {
+                const { id } = playlist;
+
+                getPagedTracks(id, playlistTrack => {
+                    const { track } = playlistTrack;
+
+                    if (uri === track.uri) {
+                        matchingPlaylists.push(playlist);
+                        return true;
+                    }
+                    return false;
+                })
+
+                return false;
+            });
+        })
+        .catch(err => console.error(err))
+
+    res.send(matchingPlaylists);
 });
 
 module.exports = router;

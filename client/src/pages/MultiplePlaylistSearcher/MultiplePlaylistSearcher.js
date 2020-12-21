@@ -5,7 +5,7 @@ function MultiplePlaylistSearcher() {
 
     return (
         <PageLayout height='100%' width='100%'>
-            <UserPlaylists margin='10%'/>
+            <UserPlaylists/>
         </PageLayout>
     )
 }
