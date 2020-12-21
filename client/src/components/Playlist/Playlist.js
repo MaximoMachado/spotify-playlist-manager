@@ -32,15 +32,17 @@ function Playlist({ playlistData, fullInfo=true, ...style}) {
                 srcSet={playlist.images}
                 fallbackSrc={`${process.env.REACT_APP_PUBLIC_URL}/no-image.png`}
             />
-            <Flex flexDirection='column' justifyContent='space-between'>
-                <ExternalHyperLink href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}>
+            <Flex width='100%' flexDirection='column' justifyContent='space-between'>
+                <ExternalHyperLink 
+                    href={(playlist.external_urls !== undefined) ? playlist.external_urls.spotify : null}
+                >
                     <Heading>{playlist.name}</Heading>
                 </ExternalHyperLink>
                 <Text>
                     {playlist.description}
                 </Text>
-                <Text>
-                    Created by {(playlist.owner !== undefined) ? playlist.owner.display_name : null}
+                <Text alignSelf='flex-end'>
+                    Created by {(playlist.owner !== undefined) ? playlist.owner.display_name : null} | {playlist.tracks !== undefined && <>{playlist.tracks.total} Songs</>}
                 </Text>
             </Flex>
         </Flex>
