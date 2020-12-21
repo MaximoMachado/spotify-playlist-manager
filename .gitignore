@@ -24,6 +24,7 @@
 
 */.eslintcache
 client/.eslintcache
+.vscode
 
 # Env Files
 /server/.env

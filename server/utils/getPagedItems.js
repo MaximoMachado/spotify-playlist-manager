@@ -4,7 +4,7 @@ function getPagedItems(id, limit, offset, spotifyApiFunc, callback) {
     let total = null;
 
     while (total === null || offset < total) {
-        spotifyApiFunc(id, {limit: limit, offset: offset})
+        spotifyApi[spotifyApiFunc](id, {limit: limit, offset: offset})
             .then(data => {
                 if (total === null) {
                     // Set total playlists once we know what it is
@@ -28,11 +28,13 @@ function getPagedItems(id, limit, offset, spotifyApiFunc, callback) {
 }
 
 function getPagedPlaylists(id, callback) {
-    getPagedItems(id, 50, 0, spotifyApi.getUserPlaylists, callback);
+    console.log('Playlist: ' + id);
+    getPagedItems(id, 50, 0, 'getUserPlaylists', callback);
 }
 
 function getPagedTracks(id, callback) {
-    getPagedItems(id, 100, 0, spotifyApi.getPlaylistTracks, callback);
+    console.log('Track: ' + id);
+    getPagedItems(id, 100, 0, 'getPlaylistTracks', callback);
 }
 
 

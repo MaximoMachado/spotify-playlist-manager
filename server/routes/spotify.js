@@ -20,16 +20,17 @@ router.get('/:func', (req, res) => {
 
 router.get('/search/playlists/:uri', (req, res) => {
     const { uri } = req.params;
+    console.log('Uri: ' + uri);
 
     const matchingPlaylists = [];
 
     spotifyApi.getMe()
         .then(data => {
             const { id } = data.body;
-
+            
             getPagedPlaylists(id, playlist => {
                 const { id } = playlist;
-
+                
                 getPagedTracks(id, playlistTrack => {
                     const { track } = playlistTrack;
 
