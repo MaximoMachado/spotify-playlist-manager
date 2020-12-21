@@ -23,6 +23,7 @@
 */yarn-error.log*
 
 */.eslintcache
+client/.eslintcache
 
 # Env Files
 /server/.env

@@ -7,6 +7,7 @@ function Playlist({ playlistData, fullInfo=true, ...style}) {
     const [playlist, setPlaylist] = useState({});
 
     useEffect(() => {
+        // TODO Figure out way to parse special characters like '&#x27;'
         const data = playlistData;
 
         const images = data.images.map(image => {

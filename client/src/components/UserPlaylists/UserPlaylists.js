@@ -14,7 +14,6 @@ function UserPlaylists({ fullInfo=true, ...style}) {
                 
 
                 setPlaylistCards(items.map(playlistData => {
-                    console.log(playlistData)
                     return <Playlist 
                         key={playlistData.uri}
                         playlistData={playlistData}
