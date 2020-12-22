@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {PageLayout} from '../../components/PageLayout/PageLayout';
 import { Playlists } from '../../components/Playlists/Playlists';
+import {Search} from '../../components/Search/Search';
 
 function MultiplePlaylistSearcher() {
 
@@ -23,6 +24,7 @@ function MultiplePlaylistSearcher() {
             width='100%'
             minWidth='100vw'
         >
+            <Search></Search>
             <Playlists playlists={playlists} fullInfo/>
         </PageLayout>
     )
