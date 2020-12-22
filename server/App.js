@@ -22,9 +22,7 @@ app.use(cors({
 }));
 
 app.use('/auth', authRouter);
-
 app.use('/spotify', spotifyRouter);
-
 app.use('/tools', toolsRouter);
 
 // catch 404 and forward to error handler

@@ -3,6 +3,17 @@ import { Flex, Image, Heading, Text } from '@chakra-ui/react';
 import { ExternalHyperLink } from '../ExternalHyperLink/ExternalHyperLink';
 
 function Card({ headerText, description, asideText, images, externalUrl, fullInfo=false, ...style}) {
+    /**
+     * Basic Card Component to display information
+     * Props:
+     * headerText {str}: Text to be displayed as header of the card
+     * externalUrl {str}: Link attached to headerText
+     * description {str}: Text that resides below the header text
+     * asideText {str}: Text to be displayed in the bottom right corner of the card
+     * images {array}: Array of image objects specified by Spotify API
+     * fullInfo {boolean}: Whether card displays description, asideText, and image
+     */
+    
     const [srcSet, setSrcSet] = useState('');
 
     useEffect(() => {

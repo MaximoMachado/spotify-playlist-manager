@@ -1,6 +1,12 @@
 import { VStack, StackDivider} from '@chakra-ui/react';
 
 function StyledVStack({ children, ...style }) {
+    /**
+     * Chakra VStack with some additional styling and responsiveness
+     * Props:
+     * children {ReactComponent}: Components to display in stack
+     */
+
     return (
         <VStack 
             height={['100%', 'auto', 'auto', 'auto']}

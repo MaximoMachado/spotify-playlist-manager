@@ -3,6 +3,9 @@ import { Avatar } from '@chakra-ui/react';
 import axios from 'axios';
 
 function SpotifyAvatar({ ...style }) {
+    /**
+     * Gets the current user's profile picture and displays it
+     */
 
     const [username, setUsername] = useState('');
     const [imgUrl, setImgUrl] = useState('');

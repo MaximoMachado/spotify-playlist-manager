@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { Card } from '../Card/Card';
 
 function Playlist({ playlist, fullInfo=false, ...style}) {
+    /**
+     * Playlist Card
+     * Props:
+     * playlist {obj}: Spotify Playlist Object
+     * fullInfo {boolean}: Whether or not to display extra information
+     */
 
     const [asideText, setAsideText] = useState('');
     const [externalUrl, setExternalUrl] = useState('');

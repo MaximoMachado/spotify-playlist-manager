@@ -2,7 +2,14 @@ import { Box, Heading, Text, Link } from "@chakra-ui/react";
 import { Link as RouterLink } from 'react-router-dom';
 
 
-function Tool({ title, desc, path, ...style }) {
+function Tool({ title, description, path, ...style }) {
+    /**
+     * Displays one of the various tools available on the site
+     * Props:
+     * title {str}: Name of the Tool
+     * description {str}: Description of the Tool
+     * path {str}: Relative path to the Tool on the website
+     */
     return (
         <Box 
             padding={5}
@@ -19,7 +26,7 @@ function Tool({ title, desc, path, ...style }) {
                     {title}
                 </Link>
             </Heading>
-            <Text marginTop={5}>{desc}</Text>
+            <Text marginTop={5}>{description}</Text>
         </Box>
     )
 }
