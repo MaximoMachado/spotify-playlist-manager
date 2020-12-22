@@ -17,7 +17,7 @@ function NotFound() {
 
     return (
         <PageLayout>
-            <Flex direction='column' align='center' height='25%'>
+            <Flex margin='auto' direction='column' align='center' height='25%'>
                 <Heading align='center'>Error 404</Heading>
                 <Text align='center'>Sorry! The page you were looking for doesn't exist.</Text>
 

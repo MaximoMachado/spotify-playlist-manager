@@ -77,7 +77,14 @@ function MultiplePlaylistSearcher() {
                     </Button>
                 </VStack>
             }
-            {loading && <CircularProgress isIndeterminate color='green.300'/>}
+            {loading && 
+                <CircularProgress 
+                    margin='auto' 
+                    size={['100px', '100px', '50px', '50px']} 
+                    isIndeterminate 
+                    color='green.300'
+                />
+            }
         </PageLayout>
     )
 }

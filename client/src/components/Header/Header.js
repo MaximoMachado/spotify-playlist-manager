@@ -6,6 +6,7 @@ function Header() {
     return (
         <Flex 
             justifyContent='space-between'
+            paddingTop='10px'
             paddingLeft='20px'
             paddingRight='20px'
             alignItems='center'

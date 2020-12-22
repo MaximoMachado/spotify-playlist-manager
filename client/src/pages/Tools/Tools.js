@@ -1,4 +1,5 @@
 import { Heading, } from "@chakra-ui/react";
+import { Link } from 'react-router-dom';
 import { PageLayout } from "../../components/PageLayout/PageLayout";
 import { StyledVStack } from "../../components/StyledVStack/StyledVStack";
 import { Tool } from "../../components/Tool/Tool";
@@ -6,8 +7,8 @@ import { Tool } from "../../components/Tool/Tool";
 function Tools() {
     return (
         <PageLayout>
-            <StyledVStack >
-                <Heading color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
+            <StyledVStack margin='auto'>
+                <Heading as={Link} to='/' color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
                 <Tool 
                     title='Multiple Playlist Searcher (WIP)'
                     description='This tool looks through your saved playlists for a chosen song and tells you which playlists contain the song.'
