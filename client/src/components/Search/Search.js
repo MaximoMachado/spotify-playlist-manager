@@ -5,11 +5,10 @@ import { StyledVStack } from "../StyledVStack/StyledVStack";
 
 function Search({ searchUrl }) {
 
+    const [search, setSearch] = useState('');
     const [results, setResults] = useState([]);
 
-    const handleSearch = (values) => {
-        const { search } = values;
-
+    const handleSearch = () => {
         axios.get(`${searchUrl}`, { withCredentials: true, params: { search: search } })
             .then(data => {
                 console.log(data);
@@ -19,18 +18,16 @@ function Search({ searchUrl }) {
 
     return (
         <>
-            <FormControl onSubmit={handleSearch}>
-                <InputGroup>
-                    <Input 
-                        name='search'
-                        placeholder='Search for a song' 
-                        isRequired 
-                    />
-                    <InputRightAddon>
-                        <Button type='submit'>Search</Button>
-                    </InputRightAddon>
-                </InputGroup>
-            </FormControl>
+            <InputGroup>
+                <Input 
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder='Search for a Song'
+                />
+                <InputRightAddon>
+                    <Button onClick={handleSearch}>Search</Button>
+                </InputRightAddon>
+            </InputGroup>
             <StyledVStack>
                 {results}
             </StyledVStack>

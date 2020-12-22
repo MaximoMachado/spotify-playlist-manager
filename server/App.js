@@ -33,12 +33,11 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
     // set locals, only providing error in development
-    res.locals.message = err.message;
+    errorMessage = req.app.get('env') === 'development' ? err.message : 'Something went wrong';
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+    res.status(err.status || 500).send(errorMessage);
 });
 
 module.exports = app;

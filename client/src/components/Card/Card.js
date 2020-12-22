@@ -27,6 +27,7 @@ function Card({ headerText, description, asideText, images, externalUrl, fullInf
         setSrcSet(formattedSrcSet);
     }, [images])
 
+    // TODO Add optional children prop to allow for buttons to be available on card
     return (
         <Flex {...style}>
             {fullInfo && <Image
