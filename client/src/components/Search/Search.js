@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Input, InputGroup, FormControl, Button, InputRightAddon } from '@chakra-ui/react';
+import { Box, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
 import { StyledVStack } from "../StyledVStack/StyledVStack";
+import { Track } from '../Track/Track';
 
-function Search({ searchUrl }) {
+function Search({ searchUrl, ...style}) {
 
     const [search, setSearch] = useState('');
     const [results, setResults] = useState([]);
@@ -11,13 +12,16 @@ function Search({ searchUrl }) {
     const handleSearch = () => {
         axios.get(`${searchUrl}`, { withCredentials: true, params: { search: search } })
             .then(data => {
-                console.log(data);
+                const { items } = data.data.body.tracks;
+                setResults(items.map(item => {
+                    return <Track track={item} fullInfo/>;
+                }));
             })
             .catch(err => console.error(err))
     };
 
     return (
-        <>
+        <Box {...style}>
             <InputGroup>
                 <Input 
                     value={search}
@@ -28,10 +32,12 @@ function Search({ searchUrl }) {
                     <Button onClick={handleSearch}>Search</Button>
                 </InputRightAddon>
             </InputGroup>
-            <StyledVStack>
-                {results}
-            </StyledVStack>
-        </>
+            {results.length > 0 && 
+                <StyledVStack>
+                    {results}
+                </StyledVStack>
+            }
+        </Box>
     );
 }
 
