@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
 import { Card } from '../Card/Card';
 
-function Track({ track, fullInfo=false, ...style }) {
+function Track({ track, topRight, fullInfo=false, ...style }) {
     /**
      * Track Card
      * Props:
      * track {obj}: Spotify Track Object
+     * topRight {ReactComponent}: Component to render in top right of Card
      * fullInfo {boolean}: Whether or not to display extra information
      */
 
@@ -41,6 +42,7 @@ function Track({ track, fullInfo=false, ...style }) {
             description={artists}
             asideText={asideText}
             images={track.album.images}
+            topRight={topRight}
             fullInfo
             {...style}
         />

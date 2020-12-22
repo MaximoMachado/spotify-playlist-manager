@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Flex, Image, Heading, Text } from '@chakra-ui/react';
+import { Flex, Image, Heading, Text, Spacer } from '@chakra-ui/react';
 import { ExternalHyperLink } from '../ExternalHyperLink/ExternalHyperLink';
 
-function Card({ headerText, description, asideText, images, externalUrl, fullInfo=false, ...style}) {
+function Card({ headerText, description, asideText, images, externalUrl, topRight, fullInfo=false, ...style}) {
     /**
      * Basic Card Component to display information
      * Props:
@@ -11,6 +11,7 @@ function Card({ headerText, description, asideText, images, externalUrl, fullInf
      * description {str}: Text that resides below the header text
      * asideText {str}: Text to be displayed in the bottom right corner of the card
      * images {array}: Array of image objects specified by Spotify API
+     * topRight {ReactComponent}: Component to render in top right of Card
      * fullInfo {boolean}: Whether card displays description, asideText, and image
      */
     
@@ -39,11 +40,15 @@ function Card({ headerText, description, asideText, images, externalUrl, fullInf
                 fallbackSrc={`${process.env.REACT_APP_PUBLIC_URL}/no-image.png`}
             />}
             <Flex width='100%' flexDirection='column' justifyContent='space-between'>
-                <ExternalHyperLink 
-                    href={externalUrl}
-                >
-                    <Heading>{headerText}</Heading>
-                </ExternalHyperLink>
+                <Flex>
+                    <ExternalHyperLink 
+                        href={externalUrl}
+                    >
+                        <Heading>{headerText}</Heading>
+                    </ExternalHyperLink>
+                    <Spacer />
+                    {topRight}
+                </Flex>
                 {fullInfo && <>
                     <Text>
                         {description}

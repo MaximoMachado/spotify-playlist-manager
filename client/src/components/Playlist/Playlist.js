@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Card } from '../Card/Card';
 
-function Playlist({ playlist, fullInfo=false, ...style}) {
+function Playlist({ playlist, topRight, fullInfo=false, ...style}) {
     /**
      * Playlist Card
      * Props:
      * playlist {obj}: Spotify Playlist Object
+     * topRight {ReactComponent}: Component to render in top right of Card
      * fullInfo {boolean}: Whether or not to display extra information
      */
 
@@ -36,6 +37,7 @@ function Playlist({ playlist, fullInfo=false, ...style}) {
             asideText={asideText}
             externalUrl={externalUrl}
             images={playlist.images}
+            topRight={topRight}
             fullInfo
             {...style}
         />
