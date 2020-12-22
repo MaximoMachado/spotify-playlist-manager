@@ -25,7 +25,6 @@ function MultiplePlaylistSearcher() {
                     setPlaylists(res.data);
                 } else {
                     toast({
-                        position: 'top',
                         title: 'Song is not in any of your playlists.',
                         description: 'Try searching another song.',
                         status: 'success',
@@ -45,32 +44,32 @@ function MultiplePlaylistSearcher() {
 
     return (
         <PageLayout 
-            height='100%'
-            minHeight='100vh'
-            width='100%'
-            minWidth='100vw'
+            paddingBottom='50px'
+            showHeader
         >
-            {(!loading && playlists.length === 0 ) && <Search 
-                searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
-                createComponents={res => {
-                    const { items } = res.data.body.tracks;
-                    return items.map(item => {
-                        return <Track 
-                                key={item.uri} 
-                                track={item} 
-                                fullInfo
-                                topRight={<Button onClick={() => checkPlaylistsForSong(item)}>Find Playlists</Button>}
-                            />;
-                    });
-                }}
-                height={['100%', '75%', '50%', '50%']}
-                width={['100%', '75%', '50%', '50%']}
-            />}
+            {(!loading && playlists.length === 0 ) && <>
+                <Search 
+                    searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
+                    createComponents={res => {
+                        const { items } = res.data.body.tracks;
+                        return items.map(item => {
+                            return <Track 
+                                    key={item.uri} 
+                                    track={item} 
+                                    fullInfo
+                                    topRight={<Button boxShadow='md' onClick={() => checkPlaylistsForSong(item)}>Find Playlists</Button>}
+                                />;
+                        });
+                    }}
+                    height={['100%', '75%', '50%', '50%']}
+                    width={['100%', '75%', '50%', '50%']}
+                />
+            </>}
             {(!loading && playlists.length > 0) &&
-                <VStack >
+                <VStack spacing='25px'>
                     <Heading textAlign='center'>Playlists Containing {song.name} by {song.artists[0].name}</Heading>
                     <Playlists playlists={playlists} fullInfo/>
-                    <Button 
+                    <Button
                         boxShadow='md'
                         onClick={handleNewSearch}
                     >
