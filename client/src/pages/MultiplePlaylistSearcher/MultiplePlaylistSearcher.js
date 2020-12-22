@@ -9,7 +9,7 @@ function MultiplePlaylistSearcher() {
 
     useEffect(() => {
         // `${process.env.REACT_APP_API_URL}/spotify/getUserPlaylists`
-        axios.get(`${process.env.REACT_APP_API_URL}/tools/multiple-playlist-searcher/spotify:track:3EQLJQKDSOCQrojIvuFx4P`, { withCredentials: true })
+        axios.get(`${process.env.REACT_APP_API_URL}/tools/multiple-playlist-searcher/spotify:track:26kP0UtIDqVEttFjX92BLA`, { withCredentials: true })
             .then(data => {
                 setPlaylists(data.data);
             })
