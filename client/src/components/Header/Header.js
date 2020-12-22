@@ -1,5 +1,5 @@
 import { Flex, Heading } from '@chakra-ui/react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {SpotifyAvatar} from '../SpotifyAvatar/SpotifyAvatar';
 
 function Header() {
@@ -14,7 +14,7 @@ function Header() {
             textDecoration='underline'
             textAlign='center'
         >
-            <Heading as={NavLink} to='/'>Spotify Playlist Manager</Heading>
+            <Heading as={Link} to='/'>Spotify Playlist Manager</Heading>
             <SpotifyAvatar />
         </Flex>
     )
