@@ -11,7 +11,6 @@ function MultiplePlaylistSearcher() {
         // `${process.env.REACT_APP_API_URL}/spotify/getUserPlaylists`
         axios.get(`${process.env.REACT_APP_API_URL}/tools/multiple-playlist-searcher/spotify:track:3EQLJQKDSOCQrojIvuFx4P`, { withCredentials: true })
             .then(data => {
-                console.log(data);
                 setPlaylists(data.data);
             })
             .catch(err => console.error(err))
@@ -24,7 +23,7 @@ function MultiplePlaylistSearcher() {
             width='100%'
             minWidth='100vw'
         >
-            <Playlists playlists={playlists}/>
+            <Playlists playlists={playlists} fullInfo/>
         </PageLayout>
     )
 }

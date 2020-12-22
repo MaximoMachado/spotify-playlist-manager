@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {StyledVStack} from '../StyledVStack/StyledVStack';
 import { Playlist } from '../Playlist/Playlist';
 
-function Playlists({ playlists, fullInfo=true, ...style}) {
+function Playlists({ playlists, fullInfo=false, ...style}) {
 
     const [playlistCards, setPlaylistCards] = useState([]);
 
@@ -10,7 +10,8 @@ function Playlists({ playlists, fullInfo=true, ...style}) {
         setPlaylistCards(playlists.map(playlistData => {
             return <Playlist 
                 key={playlistData.uri}
-                playlistData={playlistData}
+                playlist={playlistData}
+                fullInfo
             />;
         }))
     }, [playlists])
