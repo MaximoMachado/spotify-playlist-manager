@@ -30,6 +30,8 @@ function MultiplePlaylistSearcher() {
                     const { items } = res.data.body.tracks;
                     return items.map(item => <Track key={item.uri} track={item} fullInfo/>);
                 }}
+                height={['100%', '75%', '50%', '50%']}
+                width={['100%', '75%', '50%', '50%']}
             />
             {playlists.length > 0 && <Playlists playlists={playlists} fullInfo/>}
         </PageLayout>
