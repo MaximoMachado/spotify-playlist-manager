@@ -3,6 +3,7 @@ import axios from 'axios';
 import {PageLayout} from '../../components/PageLayout/PageLayout';
 import { Playlists } from '../../components/Playlists/Playlists';
 import {Search} from '../../components/Search/Search';
+import { Track } from '../../components/Track/Track';
 
 function MultiplePlaylistSearcher() {
 
@@ -25,6 +26,10 @@ function MultiplePlaylistSearcher() {
         >
             <Search 
                 searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
+                createComponents={data => {
+                    const { items } = data.data.body.tracks;
+                    return items.map(item => <Track key={item.uri} track={item} fullInfo/>);
+                }}
             />
             {playlists.length > 0 && <Playlists playlists={playlists} fullInfo/>}
         </PageLayout>
