@@ -11,8 +11,8 @@ function MultiplePlaylistSearcher() {
 
     const checkPlaylistsForSong = () => {
         axios.get(`${process.env.REACT_APP_API_URL}/tools/multiple-playlist-searcher/spotify:track:26kP0UtIDqVEttFjX92BLA`, { withCredentials: true })
-            .then(data => {
-                setPlaylists(data.data);
+            .then(res => {
+                setPlaylists(res.data);
             })
             .catch(err => console.error(err))
     };
@@ -26,8 +26,8 @@ function MultiplePlaylistSearcher() {
         >
             <Search 
                 searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
-                createComponents={data => {
-                    const { items } = data.data.body.tracks;
+                createComponents={res => {
+                    const { items } = res.data.body.tracks;
                     return items.map(item => <Track key={item.uri} track={item} fullInfo/>);
                 }}
             />
