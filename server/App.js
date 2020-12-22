@@ -7,6 +7,7 @@ var spotifyApi = require('./spotifyApi');
 
 var authRouter = require('./routes/auth');
 var spotifyRouter = require('./routes/spotify');
+var toolsRouter = require('./routes/tools');
 
 var app = express();
 
@@ -23,6 +24,8 @@ app.use(cors({
 app.use('/auth', authRouter);
 
 app.use('/spotify', spotifyRouter);
+
+app.use('/tools', toolsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
