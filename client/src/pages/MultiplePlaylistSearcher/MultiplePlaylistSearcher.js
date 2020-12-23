@@ -52,6 +52,18 @@ function MultiplePlaylistSearcher() {
                     searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
                     createComponents={res => {
                         const { items } = res.data.body.tracks;
+
+                        if (items.length === 0) {
+                            toast({
+                                title: 'No Results Found',
+                                description: 'Try a different search.',
+                                status: 'warning',
+                                duration: 9000,
+                                isClosable: true,
+                            });
+                            return [];
+                        }
+
                         return items.map(item => {
                             return <Track 
                                     key={item.uri} 
