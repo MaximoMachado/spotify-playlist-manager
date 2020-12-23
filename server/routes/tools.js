@@ -33,10 +33,20 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
         if (playlistData.rowCount > 0) {
             const playlistUris = playlistData.rows.map(row => row.playlist_uri);
 
-            const { body } = await spotifyApi.getUserPlaylists();
-            const userPlaylists = body.items;
-            
-            matchingPlaylists = userPlaylists.filter(playlist => playlistUris.includes(playlist.uri));
+            let limit = 50;
+            let offset = 0;
+            let total = null;
+            do {
+                const playlistsData = await spotifyApi.getUserPlaylists({limit: limit, offset: offset});
+                if (total === null) {
+                    total = playlistsData.body.total;
+                }
+        
+                let playlists = playlistsData.body.items;
+                matchingPlaylists = matchingPlaylists.concat(playlists.filter(playlist => playlistUris.includes(playlist.uri)));
+
+                offset += limit;
+            } while (total === null || offset < total);
         }
     } else {
         console.log('Utilize Spotify API');
