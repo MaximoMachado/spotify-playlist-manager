@@ -45,12 +45,10 @@ router.get('/callback', async (req, res) => {
             setInterval(async () => {
                 const data = await spotifyApi.refreshAccessToken();
                 const access_token = data.body['access_token'];
-                const refresh_token = data.body['refresh_token'];
 
                 console.log('The access token has been refreshed!');
                 console.log('access_token:', access_token);
                 spotifyApi.setAccessToken(access_token);
-                spotifyApi.setRefreshToken(refresh_token);
             }, expires_in / 2 * 1000);
         })
         .catch(error => {
