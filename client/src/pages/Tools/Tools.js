@@ -10,7 +10,7 @@ function Tools() {
             <StyledVStack margin='auto'>
                 <Heading as={Link} to='/' color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
                 <Tool 
-                    title='Multiple Playlist Searcher (WIP)'
+                    title='Multiple Playlist Searcher'
                     description='This tool looks through your saved playlists for a chosen song and tells you which playlists contain the song.'
                     path='/multiple-playlist-searcher'
                 />
