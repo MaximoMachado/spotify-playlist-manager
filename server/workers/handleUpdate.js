@@ -1,7 +1,7 @@
 var Queue = require('bull');
 var spotifyApi = require('../spotifyApi');
 var db = require('../db');
-var { insertDb, updateDb, modifyDb } = require('./updateDb');
+var { insertDb, modifyDb } = require('./updateDb');
 
 const handleUpdateQueue = new Queue('handle-update');
 
