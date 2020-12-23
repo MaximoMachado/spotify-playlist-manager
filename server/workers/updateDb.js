@@ -9,7 +9,7 @@ updateDb.process(async (job) => {
     const res = await spotifyApi.getMe();
     const user = res.body;
     
-    db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2)', [user.uri, new Date()]);
+    await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2)', [user.uri, new Date()]);
     
     let limit = 50;
     let offset = 0;
