@@ -31,6 +31,7 @@ function SpotifyAvatar({ ...style }) {
         <Avatar
             name={username}
             src={imgUrl}
+            shadow='dark-lg'
             {...style}
         />
     )
