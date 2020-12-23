@@ -24,20 +24,19 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     if (data.rowCount > 0 && (new Date() - data.rows[0].last_updated) < staleDataTime) {
         // TODO Use data in database to figure out matching playlists.
         console.log('Utilize Database');
-        const statement = 'SELECT playlist_uri FROM public.track_in_playlist \
-                        USING public.user_saved_playlist \
-                        WHERE public.track_in_playlist.playlist_uri = public.user_saved_playlist.playlist_uri \
-                        AND public.user_saved_playlist.user_uri = $1 \
-                        AND public.track_in_playlist.track_uri = $2';
+        const statement = `SELECT DISTINCT public.track_in_playlist.playlist_uri FROM public.track_in_playlist, public.user_saved_playlist
+                            WHERE public.user_saved_playlist.user_uri = $1
+                            AND public.track_in_playlist.track_uri = $2`;
 
         const playlistData = await db.query(statement, [user.uri, uri]);
 
         if (playlistData.rowCount > 0) {
             const playlistUris = playlistData.rows.map(row => row.playlist_uri);
-            
-            matchingPlaylists = await spotifyApi.getUserPlaylists();
 
-            matchingPlaylists = matchingPlaylists.filter(playlist => { playlistUris.includes(playlist.uri) })
+            const { body } = await spotifyApi.getUserPlaylists();
+            const userPlaylists = body.items;
+            
+            matchingPlaylists = userPlaylists.filter(playlist => playlistUris.includes(playlist.uri));
         }
     } else {
         console.log('Utilize Spotify API');
