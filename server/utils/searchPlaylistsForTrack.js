@@ -15,7 +15,7 @@ async function searchPlaylistsForTrack(uri) {
         let playlists = playlistsData.body.items;
         for (let i = 0; i < playlists.length; i++) {
             let playlist = playlists[i];
-            console.log(playlist.name);
+            //console.log(playlist.name);
             let trackLimit = 100;
             let trackOffset = 0;
             let trackTotal = null;
@@ -31,7 +31,7 @@ async function searchPlaylistsForTrack(uri) {
                 for (let j = 0; j < tracks.length; j++) {
                     let track = tracks[j].track;
                     if (track.uri === uri) {
-                        console.log('Found');
+                        //console.log('Found');
                         matchingPlaylists.push(playlist);
                         break;
                     }
