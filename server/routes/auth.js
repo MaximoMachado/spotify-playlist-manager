@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var spotifyApi = require('../spotifyApi');
+var updateDb = require('../workers/updateDb');
 
 // Authentication with Spotify API
 router.get('/login', (req, res) => {
@@ -40,6 +41,8 @@ router.get('/callback', async (req, res) => {
             console.log(
                 `Sucessfully retreived access token. Expires in ${expires_in} s.`
             );
+
+            updateDb.add();
             res.redirect(`${process.env.ORIGIN_URL}/tools`);
 
             setInterval(async () => {
