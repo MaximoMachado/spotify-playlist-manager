@@ -52,6 +52,8 @@ router.get('/callback', async (req, res) => {
                 console.log('The access token has been refreshed!');
                 console.log('access_token:', access_token);
                 spotifyApi.setAccessToken(access_token);
+                
+                handleUpdateQueue.add();
             }, expires_in / 2 * 1000);
         })
         .catch(error => {
