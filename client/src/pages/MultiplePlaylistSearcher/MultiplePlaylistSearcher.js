@@ -69,7 +69,12 @@ function MultiplePlaylistSearcher() {
                                     key={item.uri} 
                                     track={item} 
                                     fullInfo
-                                    topRight={<Button boxShadow='md' onClick={() => checkPlaylistsForSong(item)}>Find Playlists</Button>}
+                                    topRight={<Button 
+                                                backgroundColor='blue.300' 
+                                                boxShadow='md' 
+                                                onClick={() => checkPlaylistsForSong(item)}>
+                                                    Find Playlists
+                                            </Button>}
                                 />;
                         });
                     }}
