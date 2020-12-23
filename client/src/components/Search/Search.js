@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Flex, Spacer, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
+import { Flex, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
 import { StyledVStack } from "../StyledVStack/StyledVStack";
 
 function Search({ searchUrl, createComponents, ...style}) {
@@ -21,6 +21,12 @@ function Search({ searchUrl, createComponents, ...style}) {
             .catch(err => console.error(err))
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <Flex flexDirection='column' alignItems='center' {...style}>
             <InputGroup
@@ -31,6 +37,7 @@ function Search({ searchUrl, createComponents, ...style}) {
                     background='gray.50'
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
+                    onKeyPress={handleKeyPress}
                     placeholder='Search for a Song'
                 />
                 <InputRightAddon padding={0}>
