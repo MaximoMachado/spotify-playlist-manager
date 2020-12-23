@@ -20,6 +20,7 @@ async function searchPlaylistsForTrack(uri) {
             let trackOffset = 0;
             let trackTotal = null;
 
+            let foundInPlaylist = false;
             do {
                 let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
                 let tracks = tracksData.body.items;
@@ -33,12 +34,13 @@ async function searchPlaylistsForTrack(uri) {
                     if (track.uri === uri) {
                         //console.log('Found');
                         matchingPlaylists.push(playlist);
+                        foundInPlaylist = true;
                         break;
                     }
                 }
 
                 trackOffset += trackLimit;
-            } while (trackTotal === null || trackOffset < trackTotal);
+            } while (!foundInPlaylist && (trackTotal === null || trackOffset < trackTotal));
         }
 
         offset += limit;
