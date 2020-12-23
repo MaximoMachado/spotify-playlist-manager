@@ -18,7 +18,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     const users = await db.query(statement, [body.uri]);
     
     let matchingPlaylists;
-    const staleDataTime = 1000 * 60 * 60; // 1 Hour in Milliseconds
+    const staleDataTime = parseInt(process.env.STALE_DATA_TIMEOUT);
     if (users.length > 0 && (new Date() - users[0].last_updated) < staleDataTime) {
         // TODO Use data in database to figure out matching playlists.
         matchingPlaylists = [];

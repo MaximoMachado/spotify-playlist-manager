@@ -2,14 +2,17 @@ var Queue = require('bull');
 var spotifyApi = require('../spotifyApi');
 var db = require('../db');
 
-const updateDb = new Queue('cache-db');
+const insertDb = new Queue('insert-db');
+const modifyDb = new Queue('modify-db');
 
-updateDb.process(async (job) => {
-    console.log('Job Started');
-    const res = await spotifyApi.getMe();
-    const user = res.body;
-    
-    await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2)', [user.uri, new Date()]);
+insertDb.process(async (job) => {
+    // TODO Add params on what user/playlist/track to update and neccessary things to do in 
+
+    const { user, isModifying } = job;
+
+    if (!isModifying) {
+        await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2)', [user.uri, new Date()]);
+    }
     
     let limit = 50;
     let offset = 0;
@@ -64,8 +67,24 @@ updateDb.process(async (job) => {
 
         offset += limit;
     } while (total === null || offset < total);
-    console.log('Job Finished');
-})
+});
 
+modifyDb.process(async (job) => {
+    const { user } = job;
 
-module.exports = updateDb;
+    await db.query('UPDATE public.user SET last_update=$1 WHERE uri=$2', [new Date(), user.uri]);
+
+    // Flush out track_in_playlist
+    const statement = 'DELETE FROM public.track_in_playlist \
+                        USING public.user_saved_playlist \
+                        WHERE public.track_in_playlist.playlist_uri = public.user_saved_playlist.playlist_uri \
+                        AND public.user_saved_playlist.user_uri = $1';
+    await db.query(statement, [user.uri]);
+
+    // Flush out user_saved_playlist
+    await db.query('DELETE FROM public.user_saved_playlist WHERE user_uri=$1', [user.uri]);
+
+    insertDb.add({ user: user, isModifying: true });
+});
+
+module.exports = { insertDb, modifyDb };
