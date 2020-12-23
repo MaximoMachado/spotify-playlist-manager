@@ -9,11 +9,9 @@ const modifyDb = new Queue('modify-db');
 insertDb.process(async (job) => {
     console.log(`Insert Db Started:`);
     //console.log(job);
-    const { user, isModifying } = job.data;
+    const { user } = job.data;
     try {
-        if (!isModifying) {
-            await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2)', [user.uri, new Date()]);
-        }
+        await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3', [user.uri, new Date(), new Date()]);
         
         let limit = 50;
         let offset = 0;
@@ -28,7 +26,8 @@ insertDb.process(async (job) => {
             for (let i = 0; i < playlists.length; i++) {
                 let playlist = playlists[i];
                 
-                db.query('INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2)', [user.uri, playlist.uri]);
+                const statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
+                db.query(statement, [user.uri, playlist.uri]);
 
                 let trackLimit = 100;
                 let trackOffset = 0;
@@ -37,8 +36,6 @@ insertDb.process(async (job) => {
                 let insertTracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
                 let insertTracksArray = [];
                 do {
-                    
-
                     let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
                     let tracks = tracksData.body.items;
 
@@ -60,7 +57,7 @@ insertDb.process(async (job) => {
                     trackOffset += trackLimit;
                 } while (trackTotal === null || trackOffset < trackTotal);
 
-                insertTracksStatement = insertTracksStatement.slice(0, -1);
+                insertTracksStatement = insertTracksStatement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
                 if (insertTracksArray.length > 0) {
                     db.query(insertTracksStatement, insertTracksArray);
                 }
@@ -72,6 +69,8 @@ insertDb.process(async (job) => {
         console.log('Insert Db Ended');
     } catch (err) {
         console.error(err);
+        // Delete user since data was unable to be stored correctly.
+        db.query('DELETE FROM public.user WHERE uri=$1', [user.uri]);
     }
 });
 
@@ -93,7 +92,7 @@ modifyDb.process(async (job) => {
         await db.query('DELETE FROM public.user_saved_playlist WHERE user_uri=$1', [user.uri]);
 
         console.log('Modify Db ended');
-        insertDb.add({ user: user, isModifying: true });
+        insertDb.add({ user: user });
     } catch (err) {
         console.error(err);
     }

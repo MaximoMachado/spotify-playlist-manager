@@ -3,6 +3,7 @@ var router = express.Router();
 var spotifyApi = require('../spotifyApi');
 var {searchPlaylistsForTrack} = require('../utils/searchPlaylistsForTrack');
 var db = require('../db');
+var handleUpdateQueue = require('../workers/handleUpdate');
 
 router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     /**
@@ -51,6 +52,8 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     } else {
         console.log('Utilize Spotify API');
         matchingPlaylists = await searchPlaylistsForTrack(uri);
+
+        handleUpdateQueue.add();
     }
     
     res.send(matchingPlaylists);
