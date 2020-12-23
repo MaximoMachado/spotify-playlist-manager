@@ -9,7 +9,7 @@ updateDb.process(async (job) => {
     const res = await spotifyApi.getMe();
     const user = res.body;
     
-    db.query('INSERT INTO public.user(uri) VALUES($1)', user.uri);
+    db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2)', [user.uri, new Date()]);
     
     let limit = 50;
     let offset = 0;
@@ -33,6 +33,8 @@ updateDb.process(async (job) => {
             let insertTracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
             let insertTracksArray = [];
             do {
+                
+
                 let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
                 let tracks = tracksData.body.items;
 
@@ -51,13 +53,13 @@ updateDb.process(async (job) => {
                     insertTracksArray.push(track.uri);
                 }
                 
-                let insertTracksStatement = insertTracksStatement.slice(0, -1);
-                console.log(insertTracksArray);
-                if (insertTracksArray.length > 0) {
-                    db.query(insertTracksStatement, insertTracksArray);
-                }
                 trackOffset += trackLimit;
             } while (trackTotal === null || trackOffset < trackTotal);
+
+            insertTracksStatement = insertTracksStatement.slice(0, -1);
+            if (insertTracksArray.length > 0) {
+                db.query(insertTracksStatement, insertTracksArray);
+            }
         }
 
         offset += limit;
