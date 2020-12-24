@@ -22,7 +22,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     let matchingPlaylists = [];
     const staleDataTime = parseInt(process.env.STALE_DATA_TIMEOUT);
     
-    if (data.rowCount > 0 && (new Date() - data.rows[0].last_updated) < staleDataTime) {
+    if (data.rowCount > 0 && data.rows[0].ready && (new Date() - data.rows[0].last_updated) < staleDataTime) {
         // TODO Use data in database to figure out matching playlists.
         console.log('Utilize Database');
         const statement = `SELECT DISTINCT public.track_in_playlist.playlist_uri FROM public.track_in_playlist, public.user_saved_playlist

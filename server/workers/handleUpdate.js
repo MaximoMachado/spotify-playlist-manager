@@ -67,6 +67,7 @@ insertDb.process(async (job) => {
         } while (total === null || offset < total);
 
         console.log('Insert Db Ended');
+        db.query('UPDATE public.user SET ready=true WHERE uri = $1', [user.uri]);
     } catch (err) {
         console.error(err);
         // Delete user since data was unable to be stored correctly.
@@ -114,7 +115,7 @@ handleUpdateQueue.process(async (job) => {
             console.log(`${user.display_name}: User not in Db`)
             insertDb.add({ user: user });
 
-        } else if (new Date() - data.rows[0].last_updated > staleDataTime) {
+        } else if (!data.rows[0].ready || new Date() - data.rows[0].last_updated > staleDataTime) {
             // User in database and stale data
             console.log(`${user.display_name}: In Db and Stale Data`)
             modifyDb.add({ user: user });
