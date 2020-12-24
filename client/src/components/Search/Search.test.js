@@ -1,6 +1,7 @@
 import { render, cleanup } from '../../test-utils';
 import '@testing-library/jest-dom/extend-expect';
 import { Search } from './Search';
+import { fireEvent } from '@testing-library/react';
 
 afterEach(cleanup);
 
@@ -15,5 +16,10 @@ test('searches results on enter keypress', () => {
 
     const searchInput = getByPlaceholderText('Search for a Song');
 
-    
+    fireEvent.click(searchInput);
+    fireEvent.keyPress('H');
+    fireEvent.keyPress('E');
+    fireEvent.keyPress('Y');
+
+    expect(searchInput).toHaveText();
 })
