@@ -7,6 +7,13 @@ const insertDb = new Queue('insert-db');
 const modifyDb = new Queue('modify-db');
 
 insertDb.process(async (job) => {
+    /**
+     * Gets the user's tracks within each playlist and stores them in the respective database tables
+     * Allows for efficient checks of whether song is contained within a playlist and set operations
+     * 
+     * Params (within job object):
+     * user {object}: User to update within database
+     */
     console.log(`Insert Db Started:`);
     //console.log(job);
     const { user } = job.data;
@@ -16,6 +23,7 @@ insertDb.process(async (job) => {
         let limit = 50;
         let offset = 0;
         let total = null;
+        // Iterate over playlist paging object to get all pages
         do {
             const playlistsData = await spotifyApi.getUserPlaylists({limit: limit, offset: offset});
             if (total === null) {
@@ -35,6 +43,7 @@ insertDb.process(async (job) => {
 
                 let insertTracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
                 let insertTracksArray = [];
+                // Iterate over track paging object to get all pages
                 do {
                     let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
                     let tracks = tracksData.body.items;
@@ -59,6 +68,10 @@ insertDb.process(async (job) => {
 
                 insertTracksStatement = insertTracksStatement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
                 if (insertTracksArray.length > 0) {
+                    /* Statement will have final form of: (One query per playlist)
+                        'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) 
+                        VALUES ($1, $2), (...),...,(...) ON CONFLICT (playlist_uri, track_uri) DO NOTHING'
+                    */
                     db.query(insertTracksStatement, insertTracksArray);
                 }
             }
@@ -76,6 +89,14 @@ insertDb.process(async (job) => {
 });
 
 modifyDb.process(async (job) => {
+    /**
+     * Modifies the user's last updated field to now
+     * Flushes out track_in_playlist and user_saved_playlist related to the user in question
+     * It then queues up insertDb to insert in the new rows
+     * 
+     * Params (within job object):
+     * user {object}: User to update within database
+     */
     console.log(`Modify Db Started:`);
     //console.log(job);
     const { user } = job.data;
@@ -100,6 +121,17 @@ modifyDb.process(async (job) => {
 });
 
 handleUpdateQueue.process(async (job) => {
+    /**
+     * Finds out whether user's data is within database, and if it is, whether or not it's stale.
+     * Three possible Actions taken by worker
+     * 1. Queue up insertDb
+     * Occurs when the user is not within the database
+     * 2. Queue up modifyDb
+     * User is in the database but either the data is not ready to be served or it is stale
+     * 3. Do nothing
+     * User is in database, ready with valid data
+     */
+
     console.log(`Handle Update Started:`);
     //console.log(job);
     const res = await spotifyApi.getMe();
