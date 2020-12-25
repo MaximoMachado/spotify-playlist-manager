@@ -1,7 +1,7 @@
 import { render, cleanup, server } from '../../test-utils';
 import '@testing-library/jest-dom/extend-expect';
 import { Search } from './Search';
-import { fireEvent, act } from '@testing-library/react';
+import { fireEvent, act, waitFor } from '@testing-library/react';
 import { rest } from 'msw';
 
 const serverResData = {
@@ -68,12 +68,11 @@ test('searches multiple times', async () => {
     const searchInput = getByPlaceholderText('Search for a Song');
     fireEvent.change(searchInput, { target: { value: 'Back Again' } });
 
-    const searchBtn = getByText('Search');
-    
-    act(async () => {
+    await act(async () => {
         for (let i = 0; i < 50; i++) {
-            fireEvent.click(searchBtn);
+            fireEvent.click(getByText('Search'));
             await findByText('Results');
+            await waitFor(() => expect(createComponents).toHaveBeenCalled());
 
             expect(createComponents.mock.calls.length).toBe(i + 1);
             expect(createComponents.mock.calls[i][0].data).toStrictEqual(serverResData);
