@@ -59,7 +59,7 @@ test('searches results', async () => {
     expect(createComponents.mock.calls[0][0].data).toStrictEqual(serverResData);
 });
 
-/*test('searches multiple times', async () => {
+test('searches multiple times', async () => {
 
     const url = `${process.env.REACT_APP_API_URL}/spotify/searchTracks`;
     const createComponents = jest.fn(data => [<div key={0}>Results</div>]);
@@ -70,11 +70,13 @@ test('searches results', async () => {
 
     const searchBtn = getByText('Search');
     
-    for (let i = 0; i < 50; i++) {
-        fireEvent.click(searchBtn);
-        await findByText('Results');
+    act(async () => {
+        for (let i = 0; i < 50; i++) {
+            fireEvent.click(searchBtn);
+            await findByText('Results');
 
-        expect(createComponents.mock.calls.length).toBe(i + 1);
-        expect(createComponents.mock.calls[i][0].data).toStrictEqual(serverResData);
-    }
-})*/
+            expect(createComponents.mock.calls.length).toBe(i + 1);
+            expect(createComponents.mock.calls[i][0].data).toStrictEqual(serverResData);
+        }
+    });
+})
