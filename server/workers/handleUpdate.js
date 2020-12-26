@@ -44,6 +44,7 @@ insertDb.process(async (job) => {
                 let insertTracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
                 let insertTracksArray = [];
                 // Iterate over track paging object to get all pages
+                let index = 1;
                 do {
                     let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
                     let tracks = tracksData.body.items;
@@ -52,7 +53,6 @@ insertDb.process(async (job) => {
                         trackTotal = tracksData.body.total;
                     }
 
-                    let index = 1;
                     for (let j = 0; j < tracks.length; j++) {
                         let track = tracks[j].track;
 
