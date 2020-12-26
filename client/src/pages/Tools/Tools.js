@@ -16,7 +16,7 @@ function Tools() {
                 />
                 <Tool 
                     title='True Random Shuffle (WIP)'
-                    description='Creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.'
+                    description='This tool creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.'
                     path='/true-random-shuffle'
                 />
                 <Tool 
