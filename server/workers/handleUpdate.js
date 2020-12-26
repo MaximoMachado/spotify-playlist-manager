@@ -55,6 +55,9 @@ insertDb.process(async (job) => {
                     for (let j = 0; j < tracks.length; j++) {
                         let track = tracks[j].track;
 
+                        if (track === null) {
+                            continue;
+                        }
                         const firstIndex = 2 * (j + trackOffset) + 1;
                         const secondIndex = 2 * (j + trackOffset) + 2;
                         insertTracksStatement += ` ($${firstIndex}, $${secondIndex}),`;

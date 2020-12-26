@@ -31,6 +31,13 @@ async function searchPlaylistsForTrack(uri) {
 
                 for (let j = 0; j < tracks.length; j++) {
                     let track = tracks[j].track;
+
+                    if (track === null) {
+                        // Fuck you Spotify, you wasted 3 hours of our lives
+                        // and you even still have the uri of the deleted song, come on man. Just return it anyways
+                        continue;
+                    }
+
                     if (track.uri === uri) {
                         //console.log('Found');
                         matchingPlaylists.push(playlist);
