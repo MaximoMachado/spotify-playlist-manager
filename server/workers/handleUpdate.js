@@ -52,15 +52,18 @@ insertDb.process(async (job) => {
                         trackTotal = tracksData.body.total;
                     }
 
+                    let index = 1;
                     for (let j = 0; j < tracks.length; j++) {
                         let track = tracks[j].track;
 
                         if (track === null) {
+                            // Fuck you Spotify, you wasted 3 hours of our lives
+                            // and you even still have the uri of the deleted song, come on man. Just return it anyways
+                            // Track from playlist tracks can be null if it was deleted
                             continue;
                         }
-                        const firstIndex = 2 * (j + trackOffset) + 1;
-                        const secondIndex = 2 * (j + trackOffset) + 2;
-                        insertTracksStatement += ` ($${firstIndex}, $${secondIndex}),`;
+                        insertTracksStatement += ` ($${index}, $${index + 1}),`;
+                        index += 2;
 
                         insertTracksArray.push(playlist.uri);
                         insertTracksArray.push(track.uri);

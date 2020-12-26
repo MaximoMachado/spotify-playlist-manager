@@ -35,6 +35,7 @@ async function searchPlaylistsForTrack(uri) {
                     if (track === null) {
                         // Fuck you Spotify, you wasted 3 hours of our lives
                         // and you even still have the uri of the deleted song, come on man. Just return it anyways
+                        // Track from playlist tracks can be null if it was deleted
                         continue;
                     }
 
