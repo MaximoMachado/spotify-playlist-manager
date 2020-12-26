@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var spotifyApi = require('../spotifyApi');
+const getSessionSpotifyApi = require('../utils/getSessionSpotifyApi');
 
 router.get('/:func', (req, res) => {
     /**
@@ -8,6 +8,8 @@ router.get('/:func', (req, res) => {
      */
     const { func } = req.params;
     const { search, limit, offset } = req.query;
+
+    const spotifyApi = getSessionSpotifyApi(req, res);
 
     if (search === undefined ) {
         spotifyApi[func]()
