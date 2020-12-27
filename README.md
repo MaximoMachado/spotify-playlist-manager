@@ -51,6 +51,8 @@ DB_PASSWORD: Password of database
 
 DB_PORT: Port database is running on
 
+SESSION_SECRET: Secure string used for [express-session](https://www.npmjs.com/package/express-session)
+
 STALE_DATA_TIMEOUT: Used to determine when to refresh database. Would recommend `3600000` ms (1 hour)
 
 #### Misc
