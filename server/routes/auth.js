@@ -58,8 +58,6 @@ router.get('/callback', async (req, res) => {
 
                 req.session.accessToken = access_token;
                 spotifyApi.setAccessToken(access_token);
-                
-                handleUpdateQueue.add({ accessToken: req.session.accessToken });
             }, expires_in / 2 * 1000);
         })
         .catch(error => {
