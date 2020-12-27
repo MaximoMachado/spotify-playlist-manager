@@ -44,7 +44,7 @@ router.get('/callback', async (req, res) => {
                 `Sucessfully retreived access token. Expires in ${expires_in} s.`
             );
 
-            handleUpdateQueue.add();
+            handleUpdateQueue.add({ accessToken: req.session.accessToken });
             res.redirect(`${process.env.ORIGIN_URL}/tools`);
 
             setInterval(async () => {
@@ -59,7 +59,7 @@ router.get('/callback', async (req, res) => {
                 req.session.accessToken = access_token;
                 spotifyApi.setAccessToken(access_token);
                 
-                handleUpdateQueue.add();
+                handleUpdateQueue.add({ accessToken: req.session.accessToken });
             }, expires_in / 2 * 1000);
         })
         .catch(error => {

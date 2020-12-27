@@ -13,11 +13,15 @@ insertDb.process(async (job) => {
      * 
      * Params (within job object):
      * user {object}: User to update within database
+     * accessToken {str}: Access Token from Spotify for User
      */
     console.log(`Insert Db Started:`);
     
-    const { user, spotifyApi } = job.data;
+    const { user, accessToken } = job.data;
     try {
+        const spotifyApi = new SpotifyWebApi({
+            accessToken: accessToken
+        });
         await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3', [user.uri, new Date(), new Date()]);
         
         let limit = 50;
@@ -102,10 +106,11 @@ modifyDb.process(async (job) => {
      * 
      * Params (within job object):
      * user {object}: User to update within database
+     * accessToken {str}: Access Token from Spotify for User
      */
     console.log(`Modify Db Started:`);
     
-    const { user, spotifyApi } = job.data;
+    const { user, accessToken } = job.data;
     try {
         await db.query('UPDATE public.user SET last_updated=$1 WHERE uri=$2', [new Date(), user.uri]);
 
@@ -136,30 +141,34 @@ handleUpdateQueue.process(async (job) => {
      * User is in the database but either the data is not ready to be served or it is stale
      * 3. Do nothing
      * User is in database, ready with valid data
+     * 
+     * Params (within job object):
+     * accessToken {str}: Access Token from Spotify for User
      */
 
     console.log(`Handle Update Started:`);
-
-    const spotifyApi = new SpotifyWebApi({
-        accessToken: req.session.accessToken
-    });
-    const res = await spotifyApi.getMe();
-    const user = res.body;
-    
-    const data = await db.query('SELECT * FROM public.user WHERE uri=$1', [user.uri]);
-    
-
-    const staleDataTime = parseInt(process.env.STALE_DATA_TIMEOUT);
     try {
+        const { accessToken } = job.data;
+        const spotifyApi = new SpotifyWebApi({
+            accessToken: accessToken
+        });
+        const res = await spotifyApi.getMe();
+        const user = res.body;
+        
+        const data = await db.query('SELECT * FROM public.user WHERE uri=$1', [user.uri]);
+        
+
+        const staleDataTime = parseInt(process.env.STALE_DATA_TIMEOUT);
+    
         if (data.rowCount === 0) {
             // User not in database
             console.log(`${user.display_name}: User not in Db`)
-            insertDb.add({ user: user, spotifyApi: spotifyApi });
+            insertDb.add({ user: user, accessToken: accessToken });
 
         } else if (!data.rows[0].ready || new Date() - data.rows[0].last_updated > staleDataTime) {
             // User in database and stale data
             console.log(`${user.display_name}: In Db and Stale Data`)
-            modifyDb.add({ user: user, spotifyApi: spotifyApi });
+            modifyDb.add({ user: user, accessToken: accessToken });
 
         } else {
             // User in database and not stale data
