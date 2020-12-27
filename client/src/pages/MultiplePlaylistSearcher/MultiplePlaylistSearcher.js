@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import {PageLayout} from '../../components/PageLayout/PageLayout';
 import { Playlists } from '../../components/Playlists/Playlists';
 import {Search} from '../../components/Search/Search';
@@ -9,6 +10,7 @@ import { Button, CircularProgress, Heading, VStack, useToast } from '@chakra-ui/
 function MultiplePlaylistSearcher() {
 
     const toast = useToast();
+    const history = useHistory();
 
     const [song, setSong] = useState({});
     const [playlists, setPlaylists] = useState([]);
@@ -34,7 +36,10 @@ function MultiplePlaylistSearcher() {
                 }
                 setLoading(false);
             })
-            .catch(err => console.error(err))
+            .catch(err => {
+                console.error(err);
+                if (err.response.status === 401) history.push('/');
+            })
     };
 
     const handleNewSearch = () => {

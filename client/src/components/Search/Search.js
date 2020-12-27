@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Flex, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
 import { StyledVStack } from "../StyledVStack/StyledVStack";
 
@@ -11,6 +12,7 @@ function Search({ searchUrl, createComponents, ...style}) {
      * createComponents {func}: Recieves data from url and returns array of ReactComponents (Card) to render
      */
     
+    const history = useHistory();
     const [search, setSearch] = useState('');
     const [results, setResults] = useState([]);
 
@@ -18,7 +20,10 @@ function Search({ searchUrl, createComponents, ...style}) {
         axios.get(`${searchUrl}`, { withCredentials: true, params: { search: search } })
             .then(data => createComponents(data))
             .then(components => setResults(components))
-            .catch(err => console.error(err))
+            .catch(err => {
+                console.error(err)
+                if (err.response.status === 401) history.push('/');
+            })
     };
 
     const handleKeyPress = (event) => {

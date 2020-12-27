@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Avatar } from '@chakra-ui/react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 function SpotifyAvatar({ ...style }) {
     /**
      * Gets the current user's profile picture and displays it
      */
 
+    let history = useHistory();
     const [username, setUsername] = useState('');
     const [imgUrl, setImgUrl] = useState('');
 
@@ -24,7 +26,10 @@ function SpotifyAvatar({ ...style }) {
                 }
                 
             })
-            .catch(err => console.error(err))
+            .catch(err => {
+                console.error(err);
+                if (err.response.status === 401) history.push('/');
+            })
     }, [])
 
     return (
