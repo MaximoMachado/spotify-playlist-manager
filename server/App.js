@@ -13,6 +13,11 @@ var toolsRouter = require('./routes/tools');
 
 var app = express();
 
+if (process.env.SERVER === 'prod') {
+    // For reverse proxy through nginx
+    app.enable('trust proxy');
+}
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,7 +32,6 @@ const sessionStore = new pgSession({
     pool: pool,
 });
 
-app.set('trust proxy', 1);
 const secure = process.env.SERVER === 'prod';
 app.use(session({
         secret: process.env.SESSION_SECRET,
