@@ -27,13 +27,14 @@ const sessionStore = new pgSession({
     pool: pool,
 });
 
+const secure = process.env.SERVER === 'prod';
 app.use(session({
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         store: sessionStore,
         cookie: {
-          secure: process.env.SERVER === 'prod',
+          secure: secure,
           httpOnly: true,
           maxAge: 1000 * 60 * 60 // Expires after an hour
         }
