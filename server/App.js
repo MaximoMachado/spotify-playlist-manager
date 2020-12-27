@@ -27,6 +27,7 @@ const sessionStore = new pgSession({
     pool: pool,
 });
 
+app.set('trust proxy', 1);
 const secure = process.env.SERVER === 'prod';
 app.use(session({
         secret: process.env.SESSION_SECRET,
