@@ -13,9 +13,13 @@ var toolsRouter = require('./routes/tools');
 
 var app = express();
 
+let sessionSecure = false;
+let sessionProxy = false;
 if (process.env.SERVER === 'prod') {
     // For reverse proxy through nginx
     app.enable('trust proxy');
+    sessionSecure = true;
+    sessionProxy = true;
 }
 
 app.use(logger('dev'));
@@ -38,8 +42,9 @@ app.use(session({
         resave: false,
         saveUninitialized: false,
         store: sessionStore,
+        proxy: sessionProxy,
         cookie: {
-          secure: secure,
+          secure: sessionSecure,
           httpOnly: true,
           maxAge: 1000 * 60 * 60 // Expires after an hour
         }
