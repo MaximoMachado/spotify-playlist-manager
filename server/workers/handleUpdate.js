@@ -22,7 +22,7 @@ insertDb.process(async (job) => {
         const spotifyApi = new SpotifyWebApi({
             accessToken: accessToken
         });
-        await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3', [user.uri, new Date(), new Date()]);
+        await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3, ready=false', [user.uri, new Date(), new Date()]);
         
         let limit = 50;
         let offset = 0;
