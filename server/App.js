@@ -3,7 +3,9 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var spotifyApi = require('./spotifyApi');
+var session = require('express-session');
+var pgSession = require('connect-pg-simple')(session);
+var { pool } = require('./db');
 
 var authRouter = require('./routes/auth');
 var spotifyRouter = require('./routes/spotify');
@@ -21,7 +23,33 @@ app.use(cors({
     origin: process.env.ORIGIN_URL,
 }));
 
+const sessionStore = new pgSession({
+    pool: pool,
+});
+
+app.use(session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: sessionStore,
+        cookie: {
+          secure: (process.env.SERVER === 'prod') ? true : false,
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 // Expires after an hour
+        }
+}));
+
 app.use('/auth', authRouter);
+
+app.use((req, res, next) => {
+    // Authenication middleware
+    if (req.session.accessToken) {
+        next();
+    } else {
+        res.status(401).send('Invalid session. No access token.');
+    }
+});
+
 app.use('/spotify', spotifyRouter);
 app.use('/tools', toolsRouter);
 

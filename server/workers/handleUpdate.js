@@ -1,5 +1,5 @@
 var Queue = require('bull');
-var spotifyApi = require('../spotifyApi');
+var SpotifyWebApi = require('spotify-web-api-node');
 var db = require('../db');
 
 const handleUpdateQueue = new Queue('handle-update');
@@ -15,8 +15,8 @@ insertDb.process(async (job) => {
      * user {object}: User to update within database
      */
     console.log(`Insert Db Started:`);
-    //console.log(job);
-    const { user } = job.data;
+    
+    const { user, spotifyApi } = job.data;
     try {
         await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3', [user.uri, new Date(), new Date()]);
         
@@ -104,8 +104,8 @@ modifyDb.process(async (job) => {
      * user {object}: User to update within database
      */
     console.log(`Modify Db Started:`);
-    //console.log(job);
-    const { user } = job.data;
+    
+    const { user, spotifyApi } = job.data;
     try {
         await db.query('UPDATE public.user SET last_updated=$1 WHERE uri=$2', [new Date(), user.uri]);
 
@@ -120,7 +120,7 @@ modifyDb.process(async (job) => {
         await db.query('DELETE FROM public.user_saved_playlist WHERE user_uri=$1', [user.uri]);
 
         console.log('Modify Db ended');
-        insertDb.add({ user: user });
+        insertDb.add(job.data);
     } catch (err) {
         console.error(err);
     }
@@ -139,7 +139,10 @@ handleUpdateQueue.process(async (job) => {
      */
 
     console.log(`Handle Update Started:`);
-    //console.log(job);
+
+    const spotifyApi = new SpotifyWebApi({
+        accessToken: req.session.accessToken
+    });
     const res = await spotifyApi.getMe();
     const user = res.body;
     
@@ -151,12 +154,12 @@ handleUpdateQueue.process(async (job) => {
         if (data.rowCount === 0) {
             // User not in database
             console.log(`${user.display_name}: User not in Db`)
-            insertDb.add({ user: user });
+            insertDb.add({ user: user, spotifyApi: spotifyApi });
 
         } else if (!data.rows[0].ready || new Date() - data.rows[0].last_updated > staleDataTime) {
             // User in database and stale data
             console.log(`${user.display_name}: In Db and Stale Data`)
-            modifyDb.add({ user: user });
+            modifyDb.add({ user: user, spotifyApi: spotifyApi });
 
         } else {
             // User in database and not stale data

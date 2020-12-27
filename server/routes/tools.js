@@ -3,7 +3,7 @@ var router = express.Router();
 var {searchPlaylistsForTrack} = require('../utils/searchPlaylistsForTrack');
 var db = require('../db');
 var handleUpdateQueue = require('../workers/handleUpdate');
-const getSessionSpotifyApi = require('../utils/getSessionSpotifyApi');
+var SpotifyWebApi = require('spotify-web-api-node');
 
 router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     /**
@@ -13,7 +13,9 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
 
     const { uri } = req.params;
 
-    const spotifyApi = getSessionSpotifyApi(req, res);
+    const spotifyApi = new SpotifyWebApi({
+        accessToken: req.session.accessToken
+    });
     const { body } = await spotifyApi.getMe();
     const user = body;
     

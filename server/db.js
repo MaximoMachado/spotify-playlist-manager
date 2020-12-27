@@ -13,6 +13,7 @@ const pool = new Pool({
 });
 
 module.exports = {
+    pool,
     async query(text, params) {
       const start = Date.now();
       const res = await pool.query(text, params);

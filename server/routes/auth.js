@@ -32,6 +32,8 @@ router.get('/callback', async (req, res) => {
             const refresh_token = data.body['refresh_token'];
             const expires_in = data.body['expires_in'];
 
+            req.session.accessToken = access_token;
+            req.session.refreshToken = refresh_token;
             spotifyApi.setAccessToken(access_token);
             spotifyApi.setRefreshToken(refresh_token);
 
@@ -46,11 +48,15 @@ router.get('/callback', async (req, res) => {
             res.redirect(`${process.env.ORIGIN_URL}/tools`);
 
             setInterval(async () => {
+                // Set to correct user before refreshing
+                spotifyApi.setRefreshToken(req.session.refreshToken);
                 const data = await spotifyApi.refreshAccessToken();
                 const access_token = data.body['access_token'];
 
                 console.log('The access token has been refreshed!');
                 console.log('access_token:', access_token);
+
+                req.session.accessToken = access_token;
                 spotifyApi.setAccessToken(access_token);
                 
                 handleUpdateQueue.add();

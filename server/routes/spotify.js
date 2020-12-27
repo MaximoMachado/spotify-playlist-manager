@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const getSessionSpotifyApi = require('../utils/getSessionSpotifyApi');
+var SpotifyWebApi = require('spotify-web-api-node');
 
 router.get('/:func', (req, res) => {
     /**
@@ -9,9 +9,11 @@ router.get('/:func', (req, res) => {
     const { func } = req.params;
     const { search, limit, offset } = req.query;
 
-    const spotifyApi = getSessionSpotifyApi(req, res);
+    const spotifyApi = new SpotifyWebApi({
+        accessToken: req.session.accessToken
+    });
 
-    if (search === undefined ) {
+    if (search === undefined) {
         spotifyApi[func]()
             .then(data => {
                 res.send(data);
