@@ -1,6 +1,7 @@
 var Queue = require('bull');
 var SpotifyWebApi = require('spotify-web-api-node');
 var db = require('../db');
+const validUserCache = require('../utils/validUserCache');
 
 const handleUpdateQueue = new Queue('handle-update');
 const insertDb = new Queue('insert-db');
@@ -155,17 +156,14 @@ handleUpdateQueue.process(async (job) => {
         const res = await spotifyApi.getMe();
         const user = res.body;
         
-        const data = await db.query('SELECT * FROM public.user WHERE uri=$1', [user.uri]);
+        const userQueryRes = await db.query('SELECT * FROM public.user WHERE uri=$1', [user.uri]);
         
-
-        const staleDataTime = parseInt(process.env.STALE_DATA_TIMEOUT);
-    
-        if (data.rowCount === 0) {
+        if (userQueryRes.rowCount === 0) {
             // User not in database
             console.log(`${user.display_name}: User not in Db`)
             insertDb.add({ user: user, accessToken: accessToken });
 
-        } else if (!data.rows[0].ready || new Date() - data.rows[0].last_updated > staleDataTime) {
+        } else if (validUserCache(userQueryRes)) {
             // User in database and stale data
             console.log(`${user.display_name}: In Db and Stale Data`)
             modifyDb.add({ user: user, accessToken: accessToken });
