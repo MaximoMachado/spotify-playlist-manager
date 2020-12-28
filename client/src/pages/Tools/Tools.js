@@ -10,11 +10,6 @@ function Tools() {
             <StyledVStack margin='auto'>
                 <Heading as={Link} to='/' color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
                 <Tool 
-                    title='Multiple Playlist Searcher'
-                    description='This tool looks through your saved playlists for a chosen song and tells you which playlists contain the song.'
-                    path='/multiple-playlist-searcher'
-                />
-                <Tool 
                     title='True Random Shuffle (WIP)'
                     description='This tool creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.'
                     path='/true-random-shuffle'
@@ -24,7 +19,11 @@ function Tools() {
                     description='This tool creates a new playlist based on two or more other playlists using set operations, i.e. an intersection would create a playlist containing only songs that are in both playlists.'
                     path='/playlist-set-operations'
                 />
-                
+                <Tool 
+                    title='Multiple Playlist Searcher'
+                    description='This tool looks through your saved playlists for a chosen song and tells you which playlists contain the song.'
+                    path='/multiple-playlist-searcher'
+                />
             </StyledVStack>
         </PageLayout>
     );
