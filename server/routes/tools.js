@@ -55,8 +55,10 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
         }
     } else {
         console.log('Utilize Spotify API');
-        matchingPlaylists = Array.from(searchPlaylistsForTrack(uri, req.session.accessToken));
 
+        for await (let playlist of searchPlaylistsForTrack(uri, req.session.accessToken)) {
+            matchingPlaylists.push(playlist);
+        }
         handleUpdateQueue.add({ accessToken: req.session.accessToken });
     }
     
