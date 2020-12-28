@@ -3,7 +3,9 @@ var router = express.Router();
 var {searchPlaylistsForTrack} = require('../utils/searchPlaylistsForTrack');
 var db = require('../db');
 var handleUpdateQueue = require('../workers/handleUpdate');
+var handlePlaylistShuffle = require('../workers/handlePlaylistShuffle');
 var SpotifyWebApi = require('spotify-web-api-node');
+const validUserCache = require('../utils/validUserCache');
 
 router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     /**
@@ -20,12 +22,11 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     const user = body;
     
     const statement = 'SELECT * FROM public.user WHERE uri=$1';
-    const data = await db.query(statement, [user.uri]);
+    const userQueryRes = await db.query(statement, [user.uri]);
     
     let matchingPlaylists = [];
-    const staleDataTime = parseInt(process.env.STALE_DATA_TIMEOUT);
     
-    if (data.rowCount > 0 && data.rows[0].ready && (new Date() - data.rows[0].last_updated) < staleDataTime) {
+    if (validUserCache(userQueryRes)) {
         // TODO Use data in database to figure out matching playlists.
         console.log('Utilize Database');
         const statement = `SELECT DISTINCT public.track_in_playlist.playlist_uri FROM public.track_in_playlist, public.user_saved_playlist
@@ -60,6 +61,13 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     }
     
     res.send(matchingPlaylists);
+});
+
+router.post('/true-random-shuffle/:uri', async () => {
+    const { uri } = req.params;
+
+    handlePlaylistShuffle.add({ uri: uri, accessToken: req.session.accessToken });
+    res.status(202).send('Playlist sent to handler to process');
 });
 
 module.exports = router;
