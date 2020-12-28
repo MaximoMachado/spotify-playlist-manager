@@ -1,19 +1,9 @@
 var SpotifyWebApi = require('spotify-web-api-node');
 
-async function* getAll(spotifyApiFunc, id, limit, accessToken) {
-    /**
-     * Gets all items from every page from the Spotify API
-     * 
-     * Params:
-     * spotifyApiFunc {str}: Name of Spotify API Function to use
-     * id {int}: First argument of spotifyApiFunc, use null if spotifyApiFunc doesn't take first argument
-     * limit {int}: Number of items to request per page
-     * accessToken {str}: Access Token provided by user authentication
-     */
-
+async function* getAllPages(spotifyApiFunc, id, limit, accessToken) {
     const spotifyApi = new SpotifyWebApi({ accessToken: accessToken });
 
-    let total = 0;
+    let total = null;
     let offset = 0;
     do {
         let data;
@@ -28,12 +18,27 @@ async function* getAll(spotifyApiFunc, id, limit, accessToken) {
             total = data.body.total;
         }
 
-        for (let j = 0; j < items.length; j++) {
-            yield items[j];
-        }
-        
+        yield items;
         offset += limit;
     } while (total === null || offset < total);
+}
+
+async function* getAll(spotifyApiFunc, id, limit, accessToken) {
+    /**
+     * Gets all items from every page from the Spotify API
+     * 
+     * Params:
+     * spotifyApiFunc {str}: Name of Spotify API Function to use
+     * id {int}: First argument of spotifyApiFunc, use null if spotifyApiFunc doesn't take first argument
+     * limit {int}: Number of items to request per page
+     * accessToken {str}: Access Token provided by user authentication
+     */
+
+    for await (let page of getAllPages(spotifyApiFunc, id, limit, accessToken)) {
+        for (let i = 0; i < page.length; i++) {
+            yield page[i];
+        }
+    }
 }
 
  async function* getUserPlaylists(accessToken) {
@@ -42,7 +47,7 @@ async function* getAll(spotifyApiFunc, id, limit, accessToken) {
      * Params:
      * accessToken {str}: Access Token provided by user authentication
      */
-    for await (let playlist of getAll('getUserPlaylists', null, 100, accessToken)) {
+    for await (let playlist of getAll('getUserPlaylists', null, 50, accessToken)) {
         yield playlist;
     }
 }
@@ -55,7 +60,7 @@ async function* getPlaylistTracks(playlistId, accessToken) {
      * accessToken {str}: Access Token provided by user authentication
      */
 
-    for await (let track of getAll('getPlaylistTracks', playlistId, 50, accessToken)) {
+    for await (let track of getAll('getPlaylistTracks', playlistId, 100, accessToken)) {
         if (track.track === null) {
             // Tracks that cannot be played (deleted) are null
             continue;
