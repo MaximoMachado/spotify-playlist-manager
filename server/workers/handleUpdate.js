@@ -5,8 +5,10 @@ const validUserCache = require('../utils/validUserCache');
 const { getUserPlaylists, getPlaylistTracks } = require('../utils/getAll');
 
 const handleUpdateQueue = new Queue('handle-update');
+const addPlaylistQueue = new Queue('add-playlist');
 const insertDb = new Queue('insert-db');
 const modifyDb = new Queue('modify-db');
+
 
 insertDb.process(async (job) => {
     /**
@@ -137,4 +139,28 @@ handleUpdateQueue.process(async (job) => {
     }
 })
 
-module.exports = handleUpdateQueue;
+addPlaylistQueue.process(async (job) => {
+    const { userUri, playlistUri, trackUris, } = job.data;
+    console.log(`Add Playlist Started:\nUser: ${userUri} | Playlist: ${playlistUri} | Track #: ${trackUris.length}`);
+    try {
+        let statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
+        db.query(statement, [userUri, playlistUri]);
+
+        statement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
+        let values = [];
+        let index = 1;
+        for (let trackUri of trackUris) {
+            values.push(playlistUri);
+            values.push(trackUri);
+            statement += ` ($${index}, $${index + 1}),`;
+            index += 2;
+        }
+
+        statement = statement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
+        db.query(statement, values);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+module.exports = { handleUpdateQueue, addPlaylistQueue };

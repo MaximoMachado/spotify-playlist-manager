@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var spotifyApi = require('../spotifyApi');
-var handleUpdateQueue = require('../workers/handleUpdate');
+var { handleUpdateQueue } = require('../workers/handleUpdate');
 
 // Authentication with Spotify API
 router.get('/login', (req, res) => {

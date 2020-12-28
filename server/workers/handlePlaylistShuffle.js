@@ -4,6 +4,7 @@ var { getPlaylistTracks } = require('../utils/getAll');
 var shuffleArray = require('../utils/shuffleArray');
 var validUserCache = require('../utils/validUserCache');
 var db = require('../db');
+var { addPlaylistQueue } = require('./handleUpdate');
 
 const handlePlaylistShuffle = new Queue('handle-playlist-shuffle');
 
@@ -54,6 +55,11 @@ handlePlaylistShuffle.process(async (job) => {
                 const trackUriSlice = trackUris.slice(i, i + 100);
                 await spotifyApi.addTracksToPlaylist(newPlaylist.id, trackUriSlice);
             }
+            addPlaylistQueue.add({
+                userUri: user.uri,
+                playlistUri: newPlaylist.uri,
+                trackUris: trackUris,
+            });
         } catch (err) {
             // In the case that the playlist cannot be added to, delete the newly created playlist
             console.error(err);
