@@ -65,8 +65,8 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     res.send(matchingPlaylists);
 });
 
-router.post('/true-random-shuffle/:uri', async () => {
-    const { uri } = req.params;
+router.post('/true-random-shuffle/', async (req, res) => {
+    const { uri } = req.body;
 
     handlePlaylistShuffle.add({ uri: uri, accessToken: req.session.accessToken });
     res.status(202).send('Playlist sent to handler for processing');

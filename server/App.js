@@ -36,7 +36,6 @@ const sessionStore = new pgSession({
     pool: pool,
 });
 
-const secure = process.env.SERVER === 'prod';
 app.use(session({
         secret: process.env.SESSION_SECRET,
         resave: false,
