@@ -38,7 +38,7 @@ function Playlist({ playlist, topRight, fullInfo=false, ...style}) {
             externalUrl={externalUrl}
             images={playlist.images}
             topRight={topRight}
-            fullInfo
+            fullInfo={fullInfo}
             {...style}
         />
     );

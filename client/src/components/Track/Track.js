@@ -43,7 +43,7 @@ function Track({ track, topRight, fullInfo=false, ...style }) {
             asideText={asideText}
             images={track.album.images}
             topRight={topRight}
-            fullInfo
+            fullInfo={fullInfo}
             {...style}
         />
     )

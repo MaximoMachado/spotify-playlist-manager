@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage/HomePage';
 import { NotFound } from './pages/NotFound/NotFound';
 import { Tools } from './pages/Tools/Tools';
 import { MultiplePlaylistSearcher } from './pages/MultiplePlaylistSearcher/MultiplePlaylistSearcher';
+import { TrueRandomShuffle } from './pages/TrueRandomShuffle/TrueRandomShuffle';
 
 function App() {
     return (
@@ -13,7 +14,7 @@ function App() {
                 <Route path='/tools'><Tools /></Route>
 
                 <Route path='/multiple-playlist-searcher'><MultiplePlaylistSearcher /></Route>
-                <Route path='/true-random-shuffle'><NotFound /></Route>
+                <Route path='/true-random-shuffle'><TrueRandomShuffle /></Route>
                 <Route path='/playlist-set-operations'><NotFound /></Route>
 
                 <Route path='*'><NotFound /></Route>
