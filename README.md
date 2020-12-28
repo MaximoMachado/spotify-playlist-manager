@@ -5,7 +5,7 @@ Spotify Playlist Manager (SPM for short) is a website designed to utilize playli
 ### Multiple Playlist Searcher
 This tool looks through your saved playlists for a chosen song and tells you which playlists contain the song.
 
-### True Random Shuffle (WIP)
+### True Random Shuffle
 This tool creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.
 
 ### Playlist Set Operations (WIP)
