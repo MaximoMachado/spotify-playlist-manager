@@ -1,6 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var SpotifyWebApi = require('spotify-web-api-node');
+var { getUserPlaylists } = require('../utils/getAll');
+
+router.get('/user-playlists', async (req, res) => {
+    let playlists = [];
+    try {
+        for await (let playlist of getUserPlaylists(req.session.accessToken)) {
+            playlists.push(playlist);
+        }
+
+        res.status(200).send(playlists);
+    } catch (err) {
+        console.error(err);
+        res.status(err.statusCode).send('Something went wrong.');
+    }
+});
 
 router.get('/:func', (req, res) => {
     /**
