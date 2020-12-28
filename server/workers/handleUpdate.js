@@ -62,9 +62,7 @@ insertDb.process(async (job) => {
                         let track = tracks[j].track;
 
                         if (track === null) {
-                            // Fuck you Spotify, you wasted 3 hours of our lives
-                            // and you even still have the uri of the deleted song, come on man. Just return it anyways
-                            // Track from playlist tracks can be null if it was deleted
+                            // Tracks that cannot be played (deleted) are null
                             continue;
                         }
                         insertTracksStatement += ` ($${index}, $${index + 1}),`;

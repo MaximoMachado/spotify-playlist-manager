@@ -67,7 +67,7 @@ router.post('/true-random-shuffle/:uri', async () => {
     const { uri } = req.params;
 
     handlePlaylistShuffle.add({ uri: uri, accessToken: req.session.accessToken });
-    res.status(202).send('Playlist sent to handler to process');
+    res.status(202).send('Playlist sent to handler for processing');
 });
 
 module.exports = router;
