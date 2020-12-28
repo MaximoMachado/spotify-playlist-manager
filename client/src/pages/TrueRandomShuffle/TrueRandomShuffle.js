@@ -10,9 +10,9 @@ function TrueRandomShuffle() {
     const [playlists, setPlaylists] = useState([]);
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/spotify/getUserPlaylists`, { withCredentials: true })
+        axios.get(`${process.env.REACT_APP_API_URL}/spotify/user-playlists`, { withCredentials: true })
             .then(res => {
-                setPlaylists(res.data.body.items);
+                setPlaylists(res.data);
             })
             .catch(err => {
                 console.error(err);
