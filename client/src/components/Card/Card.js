@@ -41,9 +41,7 @@ function Card({ headerText, description, asideText, images, externalUrl, topRigh
             />}
             <Flex width='100%' flexDirection='column' justifyContent='space-between'>
                 <Flex>
-                    <ExternalHyperLink 
-                        href={externalUrl}
-                    >
+                    <ExternalHyperLink href={externalUrl}>
                         <Heading>{headerText}</Heading>
                     </ExternalHyperLink>
                     <Spacer />
