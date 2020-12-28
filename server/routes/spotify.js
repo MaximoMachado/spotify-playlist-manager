@@ -35,6 +35,7 @@ router.get('/:func', (req, res) => {
             })
             .catch(err => {
                 console.error(err);
+                res.send(err.statusCode);
             })
     } else {
         const newLimit = (limit !== undefined && limit <= 50) ? limit : 20;
@@ -46,6 +47,7 @@ router.get('/:func', (req, res) => {
             })
             .catch(err => {
                 console.error(err);
+                res.send(err.statusCode);
             })
     }
 });
