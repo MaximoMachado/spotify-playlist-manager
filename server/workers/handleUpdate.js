@@ -2,6 +2,7 @@ var Queue = require('bull');
 var SpotifyWebApi = require('spotify-web-api-node');
 var db = require('../db');
 const validUserCache = require('../utils/validUserCache');
+const { getUserPlaylists, getPlaylistTracks } = require('../utils/getAll');
 
 const handleUpdateQueue = new Queue('handle-update');
 const insertDb = new Queue('insert-db');
@@ -20,81 +21,42 @@ insertDb.process(async (job) => {
     
     const { user, accessToken } = job.data;
     try {
-        const spotifyApi = new SpotifyWebApi({
-            accessToken: accessToken
-        });
         await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3, ready=false', [user.uri, new Date(), new Date()]);
         
-        let limit = 50;
-        let offset = 0;
-        let total = null;
-        // Iterate over playlist paging object to get all pages
-        do {
-            const playlistsData = await spotifyApi.getUserPlaylists({limit: limit, offset: offset});
-            if (total === null) {
-                total = playlistsData.body.total;
+        for await (let playlist of getUserPlaylists(accessToken)) {
+            // Add playlist to database
+            const statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
+            db.query(statement, [user.uri, playlist.uri]);
+
+            let tracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
+            let tracksArray = [];
+            let index = 1;
+            for await (let playlistTrack of getPlaylistTracks(playlist.id, accessToken)) {
+                const { track } = playlistTrack;
+                tracksArray.push(playlist.uri);
+                tracksArray.push(track.uri);
+
+                tracksStatement += ` ($${index}, $${index + 1}),`;
+                index += 2;
             }
 
-            let playlists = playlistsData.body.items;
-            for (let i = 0; i < playlists.length; i++) {
-                let playlist = playlists[i];
-                
-                const statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
-                db.query(statement, [user.uri, playlist.uri]);
-
-                let trackLimit = 100;
-                let trackOffset = 0;
-                let trackTotal = null;
-
-                let insertTracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
-                let insertTracksArray = [];
-                // Iterate over track paging object to get all pages
-                let index = 1;
-                do {
-                    let tracksData = await spotifyApi.getPlaylistTracks(playlist.id, { limit: trackLimit, offset: trackOffset });
-                    let tracks = tracksData.body.items;
-
-                    if (trackTotal === null) {
-                        trackTotal = tracksData.body.total;
-                    }
-
-                    for (let j = 0; j < tracks.length; j++) {
-                        let track = tracks[j].track;
-
-                        if (track === null) {
-                            // Tracks that cannot be played (deleted) are null
-                            continue;
-                        }
-                        insertTracksStatement += ` ($${index}, $${index + 1}),`;
-                        index += 2;
-
-                        insertTracksArray.push(playlist.uri);
-                        insertTracksArray.push(track.uri);
-                    }
-                    
-                    trackOffset += trackLimit;
-                } while (trackTotal === null || trackOffset < trackTotal);
-
-                insertTracksStatement = insertTracksStatement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
-                if (insertTracksArray.length > 0) {
-                    /* Statement will have final form of: (One query per playlist)
-                        'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) 
-                        VALUES ($1, $2), (...),...,(...) ON CONFLICT (playlist_uri, track_uri) DO NOTHING'
-                    */
-                    db.query(insertTracksStatement, insertTracksArray);
-                }
+            // Add playlist tracks to database if they exist
+            if (tracksArray.length > 0) {
+                /* Statement will have final form of: (One query per playlist)
+                    'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) 
+                    VALUES ($1, $2), (...),...,(...) ON CONFLICT (playlist_uri, track_uri) DO NOTHING'
+                */
+                tracksStatement = tracksStatement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
+                db.query(tracksStatement, tracksArray);
             }
-
-            offset += limit;
-        } while (total === null || offset < total);
-
-        console.log('Insert Db Ended');
+        }
         db.query('UPDATE public.user SET ready=true WHERE uri = $1', [user.uri]);
     } catch (err) {
         console.error(err);
         // Delete user since data was unable to be stored correctly.
         db.query('DELETE FROM public.user WHERE uri=$1', [user.uri]);
     }
+    console.log('Insert Db Ended');
 });
 
 modifyDb.process(async (job) => {
@@ -123,11 +85,11 @@ modifyDb.process(async (job) => {
         // Flush out user_saved_playlist
         await db.query('DELETE FROM public.user_saved_playlist WHERE user_uri=$1', [user.uri]);
 
-        console.log('Modify Db ended');
         insertDb.add(job.data);
     } catch (err) {
         console.error(err);
     }
+    console.log('Modify Db Ended');
 });
 
 handleUpdateQueue.process(async (job) => {
@@ -161,7 +123,7 @@ handleUpdateQueue.process(async (job) => {
             console.log(`${user.display_name}: User not in Db`)
             insertDb.add({ user: user, accessToken: accessToken });
 
-        } else if (validUserCache(userQueryRes)) {
+        } else if (!validUserCache(userQueryRes)) {
             // User in database and stale data
             console.log(`${user.display_name}: In Db and Stale Data`)
             modifyDb.add({ user: user, accessToken: accessToken });
