@@ -2,6 +2,8 @@ var Queue = require('bull');
 var SpotifyWebApi = require('spotify-web-api-node');
 var { getPlaylistTracks } = require('../utils/getAll');
 var shuffleArray = require('../utils/shuffleArray');
+var validUserCache = require('../utils/validUserCache');
+var db = require('../db');
 
 const handlePlaylistShuffle = new Queue('handle-playlist-shuffle');
 
@@ -11,15 +13,32 @@ handlePlaylistShuffle.process(async (job) => {
         const playlistId = uri.split(':')[2];
         const spotifyApi = new SpotifyWebApi({ accessToken: accessToken });
 
+        let trackUris = [];
+
         const res = await spotifyApi.getMe();
         const user = res.body;
 
-        const trackUris = [];
-        for await (let playlistTrack of getPlaylistTracks(playlistId, accessToken)) {
-            const { track } = playlistTrack;
-            if (!playlistTrack.is_local) {
-                // Local tracks are unable to be added to new playlists
-                trackUris.push(track.uri);
+        const userQueryRes = await db.query('SELECT * FROM public.user WHERE uri=$1', [user.uri]);
+
+        // Fallback to Spotify Api for Track Uris if the database has invalid data
+        // Or an error is thrown while attempting to get data from database
+        try {
+            if (validUserCache(userQueryRes)) {
+                const statement = `SELECT public.track_in_playlist.track_uri FROM public.track_in_playlist
+                                    WHERE public.track_in_playlist.playlist_uri = $1
+                                    AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`;
+                const tracksRes = await db.query(statement, [uri]);
+                trackUris = tracksRes.rows.map(row => row.track_uri);
+            }
+        } finally {
+            if (trackUris.length === 0) {
+                for await (let playlistTrack of getPlaylistTracks(playlistId, accessToken)) {
+                    const { track } = playlistTrack;
+                    if (!playlistTrack.is_local) {
+                        // Local tracks are unable to be added to new playlists
+                        trackUris.push(track.uri);
+                    }
+                }
             }
         }
 
