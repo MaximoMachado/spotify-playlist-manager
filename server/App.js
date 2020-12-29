@@ -10,6 +10,7 @@ var { pool } = require('./db');
 var authRouter = require('./routes/auth');
 var spotifyRouter = require('./routes/spotify');
 var toolsRouter = require('./routes/tools');
+var userRouter = require('./routes/user');
 
 var app = express();
 
@@ -62,6 +63,7 @@ app.use((req, res, next) => {
 
 app.use('/spotify', spotifyRouter);
 app.use('/tools', toolsRouter);
+app.use('/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
