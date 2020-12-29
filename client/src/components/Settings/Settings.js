@@ -4,6 +4,12 @@ import axios from 'axios';
 
 
 function Settings({ isOpen, onClose, ...style}) {
+    /**
+     * Settings Modal for User
+     * Props:
+     * isOpen {boolean}: Whether Modal is open or not
+     * onClose {function}: Called whenever Modal is closed
+     */
 
     const toast = useToast();
     const [formValues, setFormValues] = useState({ playlistsToExclude: [] });
@@ -14,13 +20,13 @@ function Settings({ isOpen, onClose, ...style}) {
     useEffect(() => {
         setLoading(true);
         if (isOpen === true) {
-            axios.get(`${process.env.REACT_APP_API_URL}/user/settings`, { withCredentials: true })
+            axios.get(`${process.env.REACT_APP_API_URL}/spotify/user-playlists`, { withCredentials: true})
                 .then(res => {
-                    setFormValues(formValues => ({...formValues, ...res.data}));
+                    setPlaylists(res.data);
 
-                    axios.get(`${process.env.REACT_APP_API_URL}/spotify/user-playlists`, { withCredentials: true})
+                    axios.get(`${process.env.REACT_APP_API_URL}/user/settings`, { withCredentials: true })
                         .then(res => {
-                            setPlaylists(res.data);
+                            setFormValues(formValues => ({...formValues, ...res.data}));
                             setLoading(false);
                         })
                         .catch(err => {
