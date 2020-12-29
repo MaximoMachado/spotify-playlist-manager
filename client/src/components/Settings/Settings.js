@@ -93,8 +93,18 @@ function Settings({ isOpen, onClose, ...style}) {
                         <Heading size='md'>Multiple Playlist Searcher</Heading>
                         <Divider />
                         <Heading size='sm' margin='5px'>Songs to Exclude from Search Results</Heading>
-                        <VStack alignItems='flex-start'>
+                        <VStack 
+                            marginLeft='10px'
+                            marginRight='10px'
+                            padding='5px'
+                            overflowY='scroll'
+                            overflowX='hidden'
+                            border='1px'
+                            borderColor='gray.300'
+                            alignItems='flex-start'
+                        >
                             <Checkbox 
+                                fontWeight='bold'
                                 isChecked={excludeAll}
                                 onChange={(event) => setExcludeAll(!excludeAll)}
                             >
