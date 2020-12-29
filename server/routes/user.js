@@ -5,9 +5,17 @@ var db = require('../db');
 
 router.get('/settings/', async (req, res) => {
     const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken });
-    const user = await spotifyApi.getMe().body;
 
-    db.query('SELECT settings FROM public.user WHERE public.user = $1', [user.uri])
+    let user;
+    try {
+        const { body } = await spotifyApi.getMe();
+        user = body;
+    } catch (err) {
+        res.status(err.statusCode).send('Spotify API encountered an error');
+        return;
+    }
+
+    db.query('SELECT settings FROM public.user WHERE public.user.uri = $1', [user.uri])
         .then(rowData => {
             if (rowData.rowCount > 0) {
                 res.status(200).send(rowData.rows[0].settings);
@@ -25,9 +33,16 @@ router.post('/settings/', async (req, res) => {
     const { settings } = req.body;
 
     const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken });
-    const user = await spotifyApi.getMe().body;
+    let user;
+    try {
+        const { body } = await spotifyApi.getMe();
+        user = body;
+    } catch (err) {
+        res.status(err.statusCode).send('Spotify API encountered an error');
+        return;
+    }
 
-    db.query('UPDATE public.user SET settings = $1 WHERE public.user = $2 RETURNING public.user.settings', [settings, user.uri])
+    db.query('UPDATE public.user SET settings = $1 WHERE public.user.uri = $2 RETURNING public.user.settings', [settings, user.uri])
         .then(rowData => {
             if (rowData.rowCount > 0) {
                 res.status(201).send(rowData.rows[0]);
