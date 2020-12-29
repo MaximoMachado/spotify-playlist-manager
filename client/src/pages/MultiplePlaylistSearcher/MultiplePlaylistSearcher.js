@@ -92,10 +92,10 @@ function MultiplePlaylistSearcher() {
                 />
             </>}
             {(!loading && playlists.length > 0) &&
-                <VStack spacing='25px'>
+                <VStack width='100%' spacing='25px'>
                     <Heading 
+                        width='100%'
                         textAlign='center'
-                        whiteSpace='nowrap'
                         overflow='hidden' 
                         textOverflow='ellipsis'
                     >
