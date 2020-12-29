@@ -4,11 +4,12 @@ import { useHistory } from 'react-router-dom';
 import { Flex, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
 import { StyledVStack } from "../StyledVStack/StyledVStack";
 
-function Search({ searchUrl, createComponents, ...style}) {
+function Search({ searchUrl, searchPlaceholderText, createComponents, ...style}) {
     /**
      * Component that renders a searchbar and the results that appear underneath it
      * Props:
      * searchUrl {str}: Url to get search results from. Should have search, limit, and offset parameters
+     * searchPlaceHolderText {str}: Used for Search Input placeholder text and screenreaders
      * createComponents {func}: Recieves data from url and returns array of ReactComponents (Card) to render
      */
     
@@ -43,7 +44,8 @@ function Search({ searchUrl, createComponents, ...style}) {
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder='Search for a Song'
+                    placeholder={searchPlaceholderText}
+                    aria-label={searchPlaceholderText}
                 />
                 <InputRightAddon padding={0}>
                     <Button 
