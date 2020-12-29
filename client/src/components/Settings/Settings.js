@@ -30,11 +30,25 @@ function Settings({ isOpen, onClose, ...style}) {
                             setLoading(false);
                         })
                         .catch(err => {
+                            toast({
+                                title: 'Settings could not be opened.',
+                                description: 'Please wait a bit and then try again.',
+                                status: 'error',
+                                duration: 9000,
+                                isClosable: true,
+                            });
                             console.error(err);
                             onClose();
                         })
                 })
                 .catch(err => {
+                    toast({
+                        title: 'Settings could not be opened.',
+                        description: 'Please wait a bit and then try again.',
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
                     console.error(err);
                     onClose();
                 })

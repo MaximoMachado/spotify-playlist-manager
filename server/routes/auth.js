@@ -11,13 +11,14 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/logout', (req, res, next) => {
-    req.session.destroy()
-        .then(err => {
-            res.status(200).send('Successfully logged out.');
-        })
-        .catch((err) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error(err);
             res.status(500).send('Could not log out.');
-        })
+        } else {
+            res.status(200).send('Successfully logged out.');
+        }
+    });
 });
 
 router.get('/callback', async (req, res) => {
