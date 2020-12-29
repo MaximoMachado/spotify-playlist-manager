@@ -5,7 +5,7 @@
 -- Dumped from database version 13.1
 -- Dumped by pg_dump version 13.1
 
--- Started on 2020-12-27 20:05:47
+-- Started on 2020-12-29 13:34:29
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -57,7 +57,8 @@ ALTER TABLE public.track_in_playlist OWNER TO postgres;
 CREATE TABLE public."user" (
     uri text NOT NULL,
     last_updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    ready boolean DEFAULT false
+    ready boolean DEFAULT false,
+    settings json DEFAULT '{ "playlistsToExclude": [] }'::json NOT NULL
 );
 
 
@@ -77,7 +78,7 @@ CREATE TABLE public.user_saved_playlist (
 ALTER TABLE public.user_saved_playlist OWNER TO postgres;
 
 --
--- TOC entry 2876 (class 2606 OID 16583)
+-- TOC entry 2877 (class 2606 OID 16583)
 -- Name: session session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -86,7 +87,7 @@ ALTER TABLE ONLY public.session
 
 
 --
--- TOC entry 2873 (class 2606 OID 16494)
+-- TOC entry 2874 (class 2606 OID 16494)
 -- Name: track_in_playlist track_in_playlist_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -95,7 +96,7 @@ ALTER TABLE ONLY public.track_in_playlist
 
 
 --
--- TOC entry 2867 (class 2606 OID 16444)
+-- TOC entry 2868 (class 2606 OID 16444)
 -- Name: user uri; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -104,7 +105,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 2869 (class 2606 OID 16421)
+-- TOC entry 2870 (class 2606 OID 16421)
 -- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -113,7 +114,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 2871 (class 2606 OID 16478)
+-- TOC entry 2872 (class 2606 OID 16478)
 -- Name: user_saved_playlist user_saved_playlist_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -122,7 +123,7 @@ ALTER TABLE ONLY public.user_saved_playlist
 
 
 --
--- TOC entry 2874 (class 1259 OID 16584)
+-- TOC entry 2875 (class 1259 OID 16584)
 -- Name: IDX_session_expire; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -130,7 +131,7 @@ CREATE INDEX "IDX_session_expire" ON public.session USING btree (expire);
 
 
 --
--- TOC entry 2877 (class 2606 OID 16438)
+-- TOC entry 2878 (class 2606 OID 16438)
 -- Name: user_saved_playlist user_uri; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -138,7 +139,7 @@ ALTER TABLE ONLY public.user_saved_playlist
     ADD CONSTRAINT user_uri FOREIGN KEY (user_uri) REFERENCES public."user"(uri) NOT VALID;
 
 
--- Completed on 2020-12-27 20:05:47
+-- Completed on 2020-12-29 13:34:29
 
 --
 -- PostgreSQL database dump complete
