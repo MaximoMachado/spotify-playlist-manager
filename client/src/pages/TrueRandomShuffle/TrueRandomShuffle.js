@@ -19,8 +19,8 @@ function TrueRandomShuffle() {
             })
     }, [])
 
-    const handleCreatePlaylist = (uri) => {
-        axios.post(`${process.env.REACT_APP_API_URL}/tools/true-random-shuffle`, { uri: uri }, { withCredentials: true })
+    const handleCreatePlaylist = (playlist) => {
+        axios.post(`${process.env.REACT_APP_API_URL}/tools/true-random-shuffle`, { uri: playlist.uri, name: playlist.name }, { withCredentials: true })
             .then(res => {
                 toast({
                     title: 'Randomized Playlist Successfully Created.',
@@ -54,7 +54,7 @@ function TrueRandomShuffle() {
                             boxShadow='md'
                             border='1px'
                             borderColor='blue.200'
-                            onClick={() => handleCreatePlaylist(playlist.uri)}
+                            onClick={() => handleCreatePlaylist(playlist)}
                             >
                             Randomize Playlist
                         </Button>)}
