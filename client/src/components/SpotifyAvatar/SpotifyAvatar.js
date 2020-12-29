@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Tooltip, useToast, Center, Icon, } from '@chakra-ui/react';
+import { Avatar, Tooltip, useToast, Flex, Icon, Box, Center } from '@chakra-ui/react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
@@ -58,8 +58,11 @@ function SpotifyAvatar({ isMenuButton=false, ...style }) {
             fontSize='md'
             hasArrow
             isDisabled={!isMenuButton}
+            
         >
-            <Center
+            <Box {...style}>
+            <Flex
+                alignItems='center'
                 backgroundColor='gray.500'
                 boxShadow='md'
                 padding='5px'
@@ -68,7 +71,6 @@ function SpotifyAvatar({ isMenuButton=false, ...style }) {
                 borderRadius='15px'
                 overflow='hidden'
                 whiteSpace='nowrap'
-                {...style}
             >
                 <Avatar
                     name={username}
@@ -79,10 +81,8 @@ function SpotifyAvatar({ isMenuButton=false, ...style }) {
                     <Icon 
                         viewBox="0 0 1024 705" 
                         width='25px' 
-                        height='25px' 
-                        marginTop='auto' 
-                        marginBottom='auto' 
-                        marginLeft='10px' 
+                        height='25px'
+                        marginLeft='10px'
                         color='black'
                     >
                         <path
@@ -91,7 +91,8 @@ function SpotifyAvatar({ isMenuButton=false, ...style }) {
                         />
                     </Icon>
                 }
-            </Center>
+            </Flex>
+            </Box>
         </Tooltip>
     )
 }
