@@ -79,6 +79,8 @@ function MultiplePlaylistSearcher() {
                                                 minWidth='auto'
                                                 backgroundColor='blue.300' 
                                                 boxShadow='md' 
+                                                border='1px'
+                                                borderColor='blue.200'
                                                 onClick={() => checkPlaylistsForSong(item)}>
                                                     Find Playlists
                                             </Button>}
@@ -102,9 +104,8 @@ function MultiplePlaylistSearcher() {
                     <Playlists playlists={playlists} fullInfo/>
                     <Button
                         border='1px'
-                        borderColor='black'
+                        borderColor='gray.400'
                         boxShadow='md'
-                        
                         onClick={handleNewSearch}
                     >
                         Search For Another Song
