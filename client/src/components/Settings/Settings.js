@@ -78,7 +78,7 @@ function Settings({ isOpen, onClose, ...style}) {
         >
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Settings</ModalHeader>
+                <ModalHeader paddingBottom='0px'>Settings</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody display='flex' flexDirection='column' alignItems='center'>
                     {loading && 
@@ -90,7 +90,7 @@ function Settings({ isOpen, onClose, ...style}) {
                         />
                     }
                     {!loading && <>
-                        <Heading size='md'>Multiple Playlist Searcher</Heading>
+                        <Heading size='md' margin='5px'>Multiple Playlist Searcher</Heading>
                         <Divider />
                         <Heading size='sm' margin='5px'>Songs to Exclude from Search Results</Heading>
                         <VStack 
