@@ -29,7 +29,7 @@ function Header({ ...style }) {
             >
                 Spotify Playlist Manager
             </Heading>
-            <Menu>
+            <Menu isLazy>
                 <SpotifyAvatar 
                     as={MenuButton}
                     isMenuButton
