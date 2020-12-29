@@ -9,7 +9,7 @@ function Settings({ isOpen, onClose, ...style}) {
     const [formValues, setFormValues] = useState({});
 
     const handleSave = () => {
-        axios.post(`${process.env.REACT_APP_API_URL}/user/settings`, formValues, { withCredentials: true })
+        axios.post(`${process.env.REACT_APP_API_URL}/user/settings`, { settings: formValues }, { withCredentials: true })
             .then(res => {
                 onClose();
                 toast({
