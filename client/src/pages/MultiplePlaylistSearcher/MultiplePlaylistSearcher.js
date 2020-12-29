@@ -101,7 +101,10 @@ function MultiplePlaylistSearcher() {
                     </Heading>
                     <Playlists playlists={playlists} fullInfo/>
                     <Button
+                        border='1px'
+                        borderColor='black'
                         boxShadow='md'
+                        
                         onClick={handleNewSearch}
                     >
                         Search For Another Song

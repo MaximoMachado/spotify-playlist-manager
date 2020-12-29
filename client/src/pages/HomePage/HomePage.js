@@ -6,7 +6,7 @@ function HomePage() {
     return (
         <PageLayout>
             <Text visibility='hidden' marginBottom='auto' align='center'></Text>
-            <Flex direction='column' align='center' height='25%'>
+            <Flex direction='column' align='center' height='50%'>
                 <Heading align='center'>Spotify Playlist Manager</Heading>
                 <Spacer />
                 <Text align='center'>Tool for power users to manipulate and utilize Spotify playlists in new and unique ways.</Text>
