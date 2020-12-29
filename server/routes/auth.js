@@ -10,6 +10,16 @@ router.get('/login', (req, res) => {
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
 });
 
+router.get('/logout', (req, res, next) => {
+    req.session.destroy()
+        .then(err => {
+            res.status(200).send('Successfully logged out.');
+        })
+        .catch((err) => {
+            res.status(500).send('Could not log out.');
+        })
+});
+
 router.get('/callback', async (req, res) => {
     /**
      * Makes request for Spotify Access and Refresh Tokens
