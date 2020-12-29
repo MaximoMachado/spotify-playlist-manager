@@ -54,6 +54,7 @@ function MultiplePlaylistSearcher() {
         >
             {(!loading && playlists.length === 0 ) && <>
                 <Search 
+                    searchPlaceholderText='Search for a Song'
                     searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
                     createComponents={res => {
                         const { items } = res.data.body.tracks;
@@ -75,6 +76,7 @@ function MultiplePlaylistSearcher() {
                                     track={item} 
                                     fullInfo
                                     topRight={<Button 
+                                                minWidth='auto'
                                                 backgroundColor='blue.300' 
                                                 boxShadow='md' 
                                                 onClick={() => checkPlaylistsForSong(item)}>

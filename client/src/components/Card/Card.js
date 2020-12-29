@@ -30,25 +30,41 @@ function Card({ headerText, description, asideText, images, externalUrl, topRigh
 
     // TODO Add optional children prop to allow for buttons to be available on card
     return (
-        <Flex {...style}>
+        <Flex width='100%' {...style}>
             {fullInfo && <Image
+                display={['none', 'none', 'inline', 'inline']}
                 alignSelf='center'
-                height='90%'
+                marginTop='5px'
+                marginBottom='5px'
                 width='15%'
                 marginRight='10px'
                 srcSet={srcSet}
                 fallbackSrc={`${process.env.REACT_APP_PUBLIC_URL}/no-image.png`}
             />}
-            <Flex width='100%' flexDirection='column' justifyContent='space-between'>
-                <Flex>
-                    <ExternalHyperLink href={externalUrl}>
-                        <Heading>{headerText}</Heading>
+            <Flex 
+                width={['100%', '100%', '85%', '85%']} 
+                flexDirection='column' 
+                justifyContent='space-between'
+            >
+                <Flex width='100%' justifyContent='space-between'>
+                    <ExternalHyperLink 
+                        href={externalUrl}
+                        whiteSpace='nowrap'
+                        overflow='hidden' 
+                    >
+                        <Heading 
+                            whiteSpace='nowrap'
+                            overflow='hidden' 
+                            textOverflow='ellipsis'
+                        >
+                            {headerText}
+                        </Heading>
                     </ExternalHyperLink>
-                    <Spacer />
+                    
                     {topRight}
                 </Flex>
                 {fullInfo && <>
-                    <Text>
+                    <Text overflow='hidden' textOverflow='ellipsis'>
                         {description}
                     </Text>
                     <Text alignSelf='flex-end'>

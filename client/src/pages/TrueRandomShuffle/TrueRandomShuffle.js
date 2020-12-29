@@ -49,6 +49,7 @@ function TrueRandomShuffle() {
                 fullInfo
                 playlists={playlists}
                 createTopRight={(playlist) => (<Button
+                            minWidth='auto'
                             backgroundColor='blue.300' 
                             boxShadow='md'
                             onClick={() => handleCreatePlaylist(playlist.uri)}
