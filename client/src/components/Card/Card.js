@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Flex, Image, Heading, Text, Spacer } from '@chakra-ui/react';
+import { Flex, Image, Heading, Text, } from '@chakra-ui/react';
 import { ExternalHyperLink } from '../ExternalHyperLink/ExternalHyperLink';
 
 function Card({ headerText, description, asideText, images, externalUrl, topRight, fullInfo=false, ...style}) {
