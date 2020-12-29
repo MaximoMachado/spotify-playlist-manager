@@ -27,6 +27,8 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     
     let matchingPlaylists = [];
     
+    const playlistsToExclude = (userQueryRes.rowCount > 0) ? new Set(userQueryRes.rows[0].settings.playlistsToExclude) : new Set();
+
     if (validUserCache(userQueryRes)) {
         // TODO Use data in database to figure out matching playlists.
         console.log('Utilize Database');
@@ -41,7 +43,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
 
             let validUris = new Set(playlistUris);
             for await (let playlist of getUserPlaylists(req.session.accessToken)) {
-                if (validUris.has(playlist.uri)) {
+                if (validUris.has(playlist.uri) && !playlistsToExclude.has(playlist.uri)) {
                     matchingPlaylists.push(playlist);
                 }
             }
@@ -49,7 +51,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     } else {
         console.log('Utilize Spotify API');
 
-        for await (let playlist of searchPlaylistsForTrack(uri, req.session.accessToken)) {
+        for await (let playlist of searchPlaylistsForTrack(uri, playlistsToExclude, req.session.accessToken)) {
             matchingPlaylists.push(playlist);
         }
         handleUpdateQueue.add({ accessToken: req.session.accessToken });

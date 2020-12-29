@@ -16,22 +16,33 @@ function Settings({ isOpen, onClose, ...style}) {
         if (isOpen === true) {
             axios.get(`${process.env.REACT_APP_API_URL}/user/settings`, { withCredentials: true })
                 .then(res => {
-                    setFormValues(res.data);
+                    setFormValues(formValues => ({...formValues, ...res.data}));
+
+                    axios.get(`${process.env.REACT_APP_API_URL}/spotify/user-playlists`, { withCredentials: true})
+                        .then(res => {
+                            setPlaylists(res.data);
+                            setLoading(false);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            onClose();
+                        })
                 })
                 .catch(err => {
                     console.error(err);
                     onClose();
                 })
-            axios.get(`${process.env.REACT_APP_API_URL}/spotify/user-playlists`, { withCredentials: true})
-                .then(res => {
-                    setPlaylists(res.data);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error(err);
-                })
         }
     }, [isOpen, onClose])
+
+    useEffect(() => {
+        if (excludeAll) {
+            const exclude = playlists.map(playlist => playlist.uri);
+            setFormValues(formValues => ({...formValues, playlistsToExclude: exclude}))
+        } else {
+            setFormValues(formValues => ({...formValues, playlistsToExclude: []}))
+        }
+    }, [excludeAll, playlists])
 
     const handleSave = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/user/settings`, { settings: formValues }, { withCredentials: true })
@@ -55,15 +66,6 @@ function Settings({ isOpen, onClose, ...style}) {
                 });
             })
     }
-
-    useEffect(() => {
-        if (excludeAll) {
-            const exclude = playlists.map(playlist => playlist.uri);
-            setFormValues({...formValues, playlistsToExclude: exclude})
-        } else {
-            setFormValues({...formValues, playlistsToExclude: []})
-        }
-    }, [excludeAll, playlists])
 
     return (
         <Modal 
