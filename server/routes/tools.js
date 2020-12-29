@@ -3,7 +3,7 @@ var router = express.Router();
 var {searchPlaylistsForTrack} = require('../utils/searchPlaylistsForTrack');
 var { getUserPlaylists } = require('../utils/getAll');
 var db = require('../db');
-var { handleUpdateQueue } = require('../workers/handleUpdate');
+var { handleUpdateQueue, insertDb, modifyDb } = require('../workers/handleUpdate');
 var handlePlaylistShuffle = require('../workers/handlePlaylistShuffle');
 var SpotifyWebApi = require('spotify-web-api-node');
 const validUserCache = require('../utils/validUserCache');
@@ -22,10 +22,24 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     const { body } = await spotifyApi.getMe();
     const user = body;
     
-    const statement = 'SELECT * FROM public.user WHERE uri=$1';
-    const userQueryRes = await db.query(statement, [user.uri]);
+    let statement = 'SELECT * FROM public.user WHERE uri=$1';
+    let userQueryRes = await db.query(statement, [user.uri]);
     
     let matchingPlaylists = [];
+    
+    if (userQueryRes.rowCount > 0 && !userQueryRes.rows[0].ready) {
+        // Prevents the situation where the user's data is being cached into the database
+        // and the user attempts to make a MPS search during this period
+        // Waiting for the job to finish will prevent unneccessary rate limiting
+        
+        // Need to wait for all of these one by one since this is the flow of the jobs
+        await handleUpdateQueue.whenCurrentJobsFinished();
+        await modifyDb.whenCurrentJobsFinished();
+        await insertDb.whenCurrentJobsFinished();
+
+        // Redo query for user in case somehow worker failed and user isn't ready
+        userQueryRes = await db.query('SELECT * FROM public.user WHERE uri=$1', [user.uri]);
+    }
     
     const playlistsToExclude = (userQueryRes.rowCount > 0) ? new Set(userQueryRes.rows[0].settings.playlistsToExclude) : new Set();
 
