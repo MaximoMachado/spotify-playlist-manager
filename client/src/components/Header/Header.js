@@ -1,8 +1,18 @@
-import { Flex, Heading, Menu, MenuButton, Button } from '@chakra-ui/react';
+import { useState } from 'react';
+import { history, useHistory } from 'react-router-dom';
+import { Flex, Heading, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import {SpotifyAvatar} from '../SpotifyAvatar/SpotifyAvatar';
 
 function Header({ ...style }) {
+
+    const history = useHistory();
+    const [settingsOpen, setSettingsOpen] = useState(false);
+
+    const handleLogout = () => {
+
+    }
+
     return (
         <Flex 
             justifyContent='space-between'
@@ -19,12 +29,25 @@ function Header({ ...style }) {
             >
                 Spotify Playlist Manager
             </Heading>
-            <Flex>
-                <SpotifyAvatar />
-                <Menu>
-                    <MenuButton as={Button}>Settings</MenuButton>
-                </Menu>
-            </Flex>
+            <Menu>
+                <SpotifyAvatar 
+                    as={MenuButton}
+                    isMenuButton
+                    aria-label="User Menu"
+                />
+                <MenuList>
+                    <MenuItem
+                        onClick={() => setSettingsOpen(true)}
+                    >
+                        Settings
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => handleLogout()}
+                    >
+                        Logout
+                    </MenuItem>
+                </MenuList>
+            </Menu>
         </Flex>
     )
 }

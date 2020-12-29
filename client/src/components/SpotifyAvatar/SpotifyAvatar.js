@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, Tooltip } from '@chakra-ui/react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
-function SpotifyAvatar({ ...style }) {
+function SpotifyAvatar({ isMenuButton=false, ...style }) {
     /**
      * Gets the current user's profile picture and displays it
+     * Props:
+     * isMenuButton {boolean}: When true, displays tooltip that says "User Settings"
      */
 
     let history = useHistory();
@@ -33,12 +35,20 @@ function SpotifyAvatar({ ...style }) {
     }, [])
 
     return (
+        <Tooltip
+            label='User Settings'
+            placement='left'
+            fontSize='md'
+            hasArrow
+            isDisabled={!isMenuButton}
+        >
             <Avatar
                 name={username}
                 src={imgUrl}
                 shadow='dark-lg'
                 {...style}
             />
+        </Tooltip>
     )
 }
 
