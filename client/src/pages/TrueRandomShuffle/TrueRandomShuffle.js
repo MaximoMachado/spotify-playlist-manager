@@ -3,9 +3,11 @@ import { Button, CircularProgress, useToast } from '@chakra-ui/react';
 import { PageLayout } from "../../components/PageLayout/PageLayout";
 import { Playlists } from '../../components/Playlists/Playlists';
 import axios from "axios";
+import {useHistory} from 'react-router-dom';
 
 function TrueRandomShuffle() {
 
+    const history = useHistory();
     const toast = useToast();
     const [playlists, setPlaylists] = useState([]);
 
@@ -16,6 +18,7 @@ function TrueRandomShuffle() {
             })
             .catch(err => {
                 console.error(err);
+                if (err.response.status === 401) history.push('/');
             })
     }, [])
 
@@ -39,6 +42,7 @@ function TrueRandomShuffle() {
                     duration: 9000,
                     isClosable: true,
                 });
+                if (err.response.status === 401) history.push('/');
             })
     };
 

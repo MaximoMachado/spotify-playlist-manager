@@ -33,12 +33,12 @@ function SpotifyAvatar({ ...style }) {
     }, [])
 
     return (
-        <Avatar
-            name={username}
-            src={imgUrl}
-            shadow='dark-lg'
-            {...style}
-        />
+            <Avatar
+                name={username}
+                src={imgUrl}
+                shadow='dark-lg'
+                {...style}
+            />
     )
 }
 
