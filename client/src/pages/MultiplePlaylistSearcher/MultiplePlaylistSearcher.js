@@ -91,7 +91,14 @@ function MultiplePlaylistSearcher() {
             </>}
             {(!loading && playlists.length > 0) &&
                 <VStack spacing='25px'>
-                    <Heading textAlign='center'>Playlists Containing {song.name} by {song.artists[0].name}</Heading>
+                    <Heading 
+                        textAlign='center'
+                        whiteSpace='nowrap'
+                        overflow='hidden' 
+                        textOverflow='ellipsis'
+                    >
+                        Playlists Containing {song.name} by {song.artists[0].name}
+                    </Heading>
                     <Playlists playlists={playlists} fullInfo/>
                     <Button
                         boxShadow='md'
