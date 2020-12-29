@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { history, useHistory } from 'react-router-dom';
-import { Flex, Heading, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
+import { Flex, Heading, Menu, MenuButton, MenuList, MenuItem, useDisclosure } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import {SpotifyAvatar} from '../SpotifyAvatar/SpotifyAvatar';
+import { Settings } from '../Settings/Settings';
 
 function Header({ ...style }) {
 
     const history = useHistory();
-    const [settingsOpen, setSettingsOpen] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleLogout = () => {
-
+        history.push('/');
     }
 
     return (
@@ -37,7 +37,7 @@ function Header({ ...style }) {
                 />
                 <MenuList>
                     <MenuItem
-                        onClick={() => setSettingsOpen(true)}
+                        onClick={onOpen}
                     >
                         Settings
                     </MenuItem>
@@ -48,6 +48,7 @@ function Header({ ...style }) {
                     </MenuItem>
                 </MenuList>
             </Menu>
+            <Settings isOpen={isOpen} onClose={onClose}/>
         </Flex>
     )
 }
