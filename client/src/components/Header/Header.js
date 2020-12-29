@@ -10,6 +10,7 @@ function Header({ ...style }) {
             color='#1DB954'
             textDecoration='underline'
             textAlign='center'
+            _hover={{ textDecoration: 'none', color: 'green.700' }}
             {...style}
         >
             <Heading as={Link} to='/'>Spotify Playlist Manager</Heading>

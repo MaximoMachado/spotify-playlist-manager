@@ -8,7 +8,16 @@ function Tools() {
     return (
         <PageLayout>
             <StyledVStack margin='auto'>
-                <Heading as={Link} to='/' color='#1DB954' alignSelf='center'>Spotify Playlist Manager Tools</Heading>
+                <Heading 
+                    as={Link} 
+                    to='/' 
+                    color='#1DB954' 
+                    alignSelf='center'
+                    textDecoration='underline'
+                    _hover={{ textDecoration: 'none', color: 'green.700' }}
+                >
+                    Spotify Playlist Manager Tools
+                </Heading>
                 <Tool 
                     title='True Random Shuffle'
                     description='This tool creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.'
