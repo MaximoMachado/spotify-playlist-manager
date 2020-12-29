@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import { Button, Modal, ModalOverlay, ModalHeader, ModalContent, ModalBody, ModalFooter, ModalCloseButton, ButtonGroup, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 
@@ -5,9 +6,29 @@ import axios from 'axios';
 function Settings({ isOpen, onClose, ...style}) {
 
     const toast = useToast();
+    const [formValues, setFormValues] = useState({});
 
     const handleSave = () => {
-        
+        axios.post(`${process.env.REACT_APP_API_URL}/user/settings`, formValues, { withCredentials: true })
+            .then(res => {
+                onClose();
+                toast({
+                    title: 'Settings successfully saved!',
+                    status: 'success',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                toast({
+                    title: 'Settings could not be saved.',
+                    description: 'Please wait a bit and then try again.',
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            })
     }
 
     return (
@@ -16,6 +37,7 @@ function Settings({ isOpen, onClose, ...style}) {
             onClose={onClose}
             scrollBehavior='inside'
             isCentered
+            closeOnOverlayClick={false}
             {...style}
         >
             <ModalOverlay />
@@ -27,7 +49,12 @@ function Settings({ isOpen, onClose, ...style}) {
                 </ModalBody>
                 <ModalFooter textColor='white'>
                     <ButtonGroup spacing='3'>
-                        <Button backgroundColor='blue.300'>Save Settings</Button>
+                        <Button 
+                            backgroundColor='blue.300'
+                            onClick={() => handleSave()}
+                        >
+                            Save Settings
+                        </Button>
                         <Button 
                             variant='outline' 
                             colorScheme='red'
