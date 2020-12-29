@@ -52,11 +52,12 @@ insertDb.process(async (job) => {
                 db.query(tracksStatement, tracksArray);
             }
         }
-        db.query('UPDATE public.user SET ready=true WHERE uri = $1', [user.uri]);
+        // Waits on this query so worker doesn't end before all queries do while
+        await db.query('UPDATE public.user SET ready=true WHERE uri = $1', [user.uri]);
     } catch (err) {
         console.error(err);
         // Delete user since data was unable to be stored correctly.
-        db.query('DELETE FROM public.user WHERE uri=$1', [user.uri]);
+        await db.query('DELETE FROM public.user WHERE uri=$1', [user.uri]);
     }
     console.log('Insert Db Ended');
 });
@@ -140,6 +141,15 @@ handleUpdateQueue.process(async (job) => {
 })
 
 addPlaylistQueue.process(async (job) => {
+    /**
+     * Adds a specific playlist and its tracks for a user to the database
+     * Expects the user to already be in the database
+     * 
+     * Params (within job object):
+     * userUri {str}: Uri of Spotify User that has playlist saved
+     * playlistUri {str}: Uri of playlist to add
+     * trackUris {arr[str]}: Uris of tracks that are within the playlist
+     */
     const { userUri, playlistUri, trackUris, } = job.data;
     console.log(`Add Playlist Started:\nUser: ${userUri} | Playlist: ${playlistUri} | Track #: ${trackUris.length}`);
     try {
@@ -163,4 +173,4 @@ addPlaylistQueue.process(async (job) => {
     }
 });
 
-module.exports = { handleUpdateQueue, addPlaylistQueue };
+module.exports = { handleUpdateQueue, addPlaylistQueue, insertDb, modifyDb };
