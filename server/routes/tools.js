@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var {searchPlaylistsForTrack} = require('../utils/searchPlaylistsForTrack');
+var { getUserPlaylists } = require('../utils/getAll');
 var db = require('../db');
 var { handleUpdateQueue } = require('../workers/handleUpdate');
 var handlePlaylistShuffle = require('../workers/handlePlaylistShuffle');
@@ -38,20 +39,12 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
         if (playlistData.rowCount > 0) {
             const playlistUris = playlistData.rows.map(row => row.playlist_uri);
 
-            let limit = 50;
-            let offset = 0;
-            let total = null;
-            do {
-                const playlistsData = await spotifyApi.getUserPlaylists({limit: limit, offset: offset});
-                if (total === null) {
-                    total = playlistsData.body.total;
+            let validUris = new Set(playlistUris);
+            for await (let playlist of getUserPlaylists(req.session.accessToken)) {
+                if (validUris.has(playlist.uri)) {
+                    matchingPlaylists.push(playlist);
                 }
-        
-                let playlists = playlistsData.body.items;
-                matchingPlaylists = matchingPlaylists.concat(playlists.filter(playlist => playlistUris.includes(playlist.uri)));
-
-                offset += limit;
-            } while (total === null || offset < total);
+            }
         }
     } else {
         console.log('Utilize Spotify API');
