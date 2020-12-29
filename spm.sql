@@ -5,7 +5,7 @@
 -- Dumped from database version 13.1
 -- Dumped by pg_dump version 13.1
 
--- Started on 2020-12-29 13:34:29
+-- Started on 2020-12-29 16:40:43
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -57,7 +57,7 @@ ALTER TABLE public.track_in_playlist OWNER TO postgres;
 CREATE TABLE public."user" (
     uri text NOT NULL,
     last_updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    ready boolean DEFAULT false,
+    ready boolean DEFAULT false NOT NULL,
     settings json DEFAULT '{ "playlistsToExclude": [] }'::json NOT NULL
 );
 
@@ -139,7 +139,7 @@ ALTER TABLE ONLY public.user_saved_playlist
     ADD CONSTRAINT user_uri FOREIGN KEY (user_uri) REFERENCES public."user"(uri) NOT VALID;
 
 
--- Completed on 2020-12-29 13:34:29
+-- Completed on 2020-12-29 16:40:43
 
 --
 -- PostgreSQL database dump complete
