@@ -78,19 +78,20 @@ function Settings({ isOpen, onClose, ...style}) {
             <ModalContent>
                 <ModalHeader>Settings</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody display='flex' flexDirection='column'>
+                <ModalBody display='flex' flexDirection='column' alignItems='center'>
                     {loading && 
                         <CircularProgress 
-                            margin='auto' 
+                            margin='50px' 
                             size={['100px', '100px', '50px', '50px']} 
                             isIndeterminate 
                             color='green.300'
                         />
                     }
                     {!loading && <>
-                        <Heading>Multiple Playlist Searcher</Heading>
+                        <Heading size='md'>Multiple Playlist Searcher</Heading>
                         <Divider />
-                        <VStack>
+                        <Heading size='sm' margin='5px'>Songs to Exclude from Search Results</Heading>
+                        <VStack alignItems='flex-start'>
                             <Checkbox 
                                 isChecked={excludeAll}
                                 onChange={(event) => setExcludeAll(!excludeAll)}
