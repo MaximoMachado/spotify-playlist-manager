@@ -1,16 +1,37 @@
 import { useHistory } from 'react-router-dom';
-import { Flex, Heading, Menu, MenuButton, MenuList, MenuItem, useDisclosure } from '@chakra-ui/react';
+import { useToast, Flex, Heading, Menu, MenuButton, MenuList, MenuItem, useDisclosure } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import {SpotifyAvatar} from '../SpotifyAvatar/SpotifyAvatar';
 import { Settings } from '../Settings/Settings';
+import axios from 'axios';
 
 function Header({ ...style }) {
 
+    const toast = useToast();
     const history = useHistory();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleLogout = () => {
-        history.push('/');
+        axios.get(`${process.env.REACT_APP_API_URL}/auth/logout`)
+            .then(res => {
+                history.push('/');
+                toast({
+                    title: 'Sucessfully logged out.',
+                    status: 'success',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                toast({
+                    title: 'Something went wrong with logging out.',
+                    description: 'Please wait a bit and then try again.',
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            })
     }
 
     return (
