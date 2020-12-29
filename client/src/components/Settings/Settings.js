@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Button, Modal, ModalOverlay, ModalHeader, ModalContent, ModalBody, ModalFooter, ModalCloseButton, ButtonGroup, useToast } from '@chakra-ui/react';
+import { VStack, CircularProgress, Heading, CheckboxGroup, Checkbox, Button, Modal, ModalOverlay, ModalHeader, ModalContent, ModalBody, ModalFooter, ModalCloseButton, ButtonGroup, useToast, Divider } from '@chakra-ui/react';
 import axios from 'axios';
 
 
 function Settings({ isOpen, onClose, ...style}) {
 
     const toast = useToast();
-    const [formValues, setFormValues] = useState({});
+    const [formValues, setFormValues] = useState({ playlistsToExclude: [] });
+    const [playlists, setPlaylists] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [excludeAll, setExcludeAll] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         if (isOpen === true) {
             axios.get(`${process.env.REACT_APP_API_URL}/user/settings`, { withCredentials: true })
                 .then(res => {
@@ -17,6 +21,14 @@ function Settings({ isOpen, onClose, ...style}) {
                 .catch(err => {
                     console.error(err);
                     onClose();
+                })
+            axios.get(`${process.env.REACT_APP_API_URL}/spotify/user-playlists`, { withCredentials: true})
+                .then(res => {
+                    setPlaylists(res.data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.error(err);
                 })
         }
     }, [isOpen, onClose])
@@ -44,6 +56,15 @@ function Settings({ isOpen, onClose, ...style}) {
             })
     }
 
+    useEffect(() => {
+        if (excludeAll) {
+            const exclude = playlists.map(playlist => playlist.uri);
+            setFormValues({...formValues, playlistsToExclude: exclude})
+        } else {
+            setFormValues({...formValues, playlistsToExclude: []})
+        }
+    }, [excludeAll, playlists])
+
     return (
         <Modal 
             isOpen={isOpen}
@@ -57,8 +78,33 @@ function Settings({ isOpen, onClose, ...style}) {
             <ModalContent>
                 <ModalHeader>Settings</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
-
+                <ModalBody display='flex' flexDirection='column'>
+                    {loading && 
+                        <CircularProgress 
+                            margin='auto' 
+                            size={['100px', '100px', '50px', '50px']} 
+                            isIndeterminate 
+                            color='green.300'
+                        />
+                    }
+                    {!loading && <>
+                        <Heading>Multiple Playlist Searcher</Heading>
+                        <Divider />
+                        <VStack>
+                            <Checkbox 
+                                isChecked={excludeAll}
+                                onChange={(event) => setExcludeAll(!excludeAll)}
+                            >
+                                Exclude All Playlists
+                            </Checkbox>
+                            <CheckboxGroup 
+                                value={formValues.playlistsToExclude}
+                                onChange={(value) => setFormValues({ ...formValues,  playlistsToExclude: value})}
+                            >
+                                {playlists.map(playlist => <Checkbox key={playlist.uri} value={playlist.uri}>{playlist.name}</Checkbox>)}   
+                            </CheckboxGroup>
+                        </VStack>
+                    </>}
                 </ModalBody>
                 <ModalFooter textColor='white'>
                     <ButtonGroup spacing='3'>
