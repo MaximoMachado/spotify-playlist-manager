@@ -74,6 +74,7 @@ You should then go to <http://localhost:3000>.
 I just wanted to thank a couple people for helping debug and test the website as I developed it. Without their support, it would've been much, much harder to catch and fix bugs once the website was fully live.
 
 - Justin Kwon
+- Saba Zerefa
 - Justin Witherspoon
 - Edward McKeown
 - Josh Barbell
