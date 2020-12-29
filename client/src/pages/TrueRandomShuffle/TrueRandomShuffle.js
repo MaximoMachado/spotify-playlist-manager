@@ -52,6 +52,8 @@ function TrueRandomShuffle() {
                             minWidth='auto'
                             backgroundColor='blue.300' 
                             boxShadow='md'
+                            border='1px'
+                            borderColor='blue.200'
                             onClick={() => handleCreatePlaylist(playlist.uri)}
                             >
                             Randomize Playlist
