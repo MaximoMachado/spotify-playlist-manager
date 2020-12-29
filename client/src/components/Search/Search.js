@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Flex, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
+import { useToast, Flex, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
 import { StyledVStack } from "../StyledVStack/StyledVStack";
 
 function Search({ searchUrl, searchPlaceholderText, createComponents, ...style}) {
@@ -14,6 +14,7 @@ function Search({ searchUrl, searchPlaceholderText, createComponents, ...style})
      */
     
     const history = useHistory();
+    const toast = useToast();
     const [search, setSearch] = useState('');
     const [results, setResults] = useState([]);
 
@@ -23,7 +24,23 @@ function Search({ searchUrl, searchPlaceholderText, createComponents, ...style})
             .then(components => setResults(components))
             .catch(err => {
                 console.error(err)
-                if (err.response.status === 401) history.push('/');
+                if (err.response.status === 401) {
+                    history.push('/');
+                    toast({
+                        title: 'Please login first and try again.',
+                        status: 'warning',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                } else {
+                    toast({
+                        title: 'Something went wrong.',
+                        description: 'Please wait a bit and then try again.',
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
             })
     };
 

@@ -38,7 +38,23 @@ function MultiplePlaylistSearcher() {
             })
             .catch(err => {
                 console.error(err);
-                if (err.response.status === 401) history.push('/');
+                if (err.response.status === 401) {
+                    history.push('/');
+                    toast({
+                        title: 'Please login first and try again.',
+                        status: 'warning',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                } else {
+                    toast({
+                        title: 'Something went wrong.',
+                        description: 'Please wait a bit and then try again.',
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
             })
     };
 

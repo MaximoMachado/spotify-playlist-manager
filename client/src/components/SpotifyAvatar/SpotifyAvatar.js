@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Tooltip } from '@chakra-ui/react';
+import { Avatar, Tooltip, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ function SpotifyAvatar({ isMenuButton=false, ...style }) {
      * isMenuButton {boolean}: When true, displays tooltip that says "User Settings"
      */
 
+    const toast = useToast();
     let history = useHistory();
     const [username, setUsername] = useState('');
     const [imgUrl, setImgUrl] = useState('');
@@ -30,7 +31,23 @@ function SpotifyAvatar({ isMenuButton=false, ...style }) {
             })
             .catch(err => {
                 console.error(err);
-                if (err.response.status === 401) history.push('/');
+                if (err.response.status === 401) {
+                    history.push('/');
+                    toast({
+                        title: 'Please login first and try again.',
+                        status: 'warning',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                } else {
+                    toast({
+                        title: 'Something went wrong.',
+                        description: 'Please wait a bit and then try again.',
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
             })
     }, [])
 

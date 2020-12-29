@@ -12,7 +12,7 @@ function Header({ ...style }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleLogout = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/auth/logout`)
+        axios.get(`${process.env.REACT_APP_API_URL}/auth/logout`, { withCredentials: true })
             .then(res => {
                 history.push('/');
                 toast({
