@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Modal, ModalOverlay, ModalHeader, ModalContent, ModalBody, ModalFooter, ModalCloseButton, ButtonGroup, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 
@@ -7,6 +7,19 @@ function Settings({ isOpen, onClose, ...style}) {
 
     const toast = useToast();
     const [formValues, setFormValues] = useState({});
+
+    useEffect(() => {
+        if (isOpen === true) {
+            axios.get(`${process.env.REACT_APP_API_URL}/user/settings`, { withCredentials: true })
+                .then(res => {
+                    setFormValues(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    onClose();
+                })
+        }
+    }, [isOpen, onClose])
 
     const handleSave = () => {
         axios.post(`${process.env.REACT_APP_API_URL}/user/settings`, { settings: formValues }, { withCredentials: true })
