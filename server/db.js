@@ -14,12 +14,15 @@ const pool = new Pool({
 
 module.exports = {
     pool,
+    // Code from PG package recommended logging for queries
     async query(text, params) {
       const start = Date.now();
       const res = await pool.query(text, params);
       const duration = Date.now() - start;
       
-      console.log('executed query', { text, duration, rows: res.rowCount });
+      const maxLength = 500;
+      const query = (text.length > maxLength) ? text.slice(0, maxLength / 4) + ' ... ' + text.slice(maxLength * (3 / 4), maxLength) : text;
+      console.log('executed query', { query, duration, rows: res.rowCount });
       return res;
     },
     async getClient() {

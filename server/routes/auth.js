@@ -25,6 +25,8 @@ router.get('/callback', async (req, res) => {
     /**
      * Makes request for Spotify Access and Refresh Tokens
      * Also, periodically refreshes token if it is able to
+     * 
+     * Code from example authentication from spotify-web-api-node
      */
 
     const error = req.query.error;
