@@ -10,10 +10,13 @@ function PageLayout({ showHeader=false, children, ...style }) {
             minHeight='100vh'
             maxWidth='100vw'
             background='#EBF8FF'
-            padding='20px'
+            paddingTop='20px'
+            paddingBottom='20px'
+            paddingRight={['0px', '20px', '20px', '20px']}
+            paddingLeft={['0px', '20px', '20px', '20px']}
             {...style}
         >
-            {showHeader && <Header height='7vh' width='100vw' marginBottom='50px'/>}
+            {showHeader && <Header height='7vh' marginBottom='50px'/>}
             <Flex
                 width='100%'
                 maxWidth='100vw'
