@@ -23,6 +23,23 @@ if (process.env.SERVER === 'prod') {
     sessionProxy = true;
 }
 
+var {handleWorkerLogs} = require('./workers/handleWorkerLogs');
+
+// Remove any leftover loggers from when server was last run
+handleWorkerLogs.getRepeatableJobs()
+    .then(loggers => {
+        for (let logger of loggers) {
+            handleWorkerLogs.removeRepeatableByKey(logger.key);
+        }
+    })
+    .catch(err => console.error(err))
+
+handleWorkerLogs.add({}, {
+    repeat: {
+        cron: '0 * * * *' // Every Hour https://crontab.cronhub.io/
+    }
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
