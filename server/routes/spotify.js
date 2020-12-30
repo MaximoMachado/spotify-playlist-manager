@@ -3,7 +3,7 @@ var router = express.Router();
 var SpotifyWebApi = require('spotify-web-api-node');
 var { getUserPlaylists } = require('../utils/getAll');
 
-router.get('/user-playlists', async (req, res) => {
+router.get('/user-playlists', async (req, res, next) => {
     let playlists = [];
     try {
         for await (let playlist of getUserPlaylists(req.session.accessToken)) {
@@ -13,11 +13,11 @@ router.get('/user-playlists', async (req, res) => {
         res.status(200).send(playlists);
     } catch (err) {
         console.error(err);
-        res.status(err.statusCode).send('Something went wrong.');
+        next(createError(err.statusCode));
     }
 });
 
-router.get('/:func', (req, res) => {
+router.get('/:func', (req, res, next) => {
     /**
      * Allows any Spotify API function to be called that takes in no arguments or searches and returns the data.
      */
@@ -35,7 +35,7 @@ router.get('/:func', (req, res) => {
             })
             .catch(err => {
                 console.error(err);
-                res.send(err.statusCode);
+                next(createError(err.statusCode));
             })
     } else {
         const newLimit = (limit !== undefined && limit <= 50) ? limit : 20;
@@ -47,7 +47,7 @@ router.get('/:func', (req, res) => {
             })
             .catch(err => {
                 console.error(err);
-                res.send(err.statusCode);
+                next(createError(err.statusCode));
             })
     }
 });

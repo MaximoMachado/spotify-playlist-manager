@@ -28,7 +28,7 @@ async function setupCronJobs() {
 
     clearDb.add({}, {
         repeat: {
-            cron: '0 0 0 0 */6 *' // Every 6 months 
+            cron: '0 0 1 */6 *' // 1st day of every 6th month 
         }
     })
 }

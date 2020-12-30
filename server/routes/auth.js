@@ -4,7 +4,7 @@ var spotifyApi = require('../spotifyApi');
 var { handleUpdateQueue } = require('../workers/handleUpdate');
 
 // Authentication with Spotify API
-router.get('/login', (req, res) => {
+router.get('/login', (req, res, next) => {
     const scopes = ['playlist-modify-public', 'playlist-modify-private', 'playlist-read-private', 'playlist-read-collaborative'];
 
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
@@ -14,14 +14,14 @@ router.get('/logout', (req, res, next) => {
     req.session.destroy((err) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Could not log out.');
+            next(createError(500));
         } else {
             res.status(200).send('Successfully logged out.');
         }
     });
 });
 
-router.get('/callback', async (req, res) => {
+router.get('/callback', async (req, res, next) => {
     /**
      * Makes request for Spotify Access and Refresh Tokens
      * Also, periodically refreshes token if it is able to

@@ -3,7 +3,7 @@ var router = express.Router();
 var SpotifyWebApi = require('spotify-web-api-node');
 var db = require('../db');
 
-router.get('/settings/', async (req, res) => {
+router.get('/settings/', async (req, res, next) => {
     const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken });
 
     let user;
@@ -20,16 +20,16 @@ router.get('/settings/', async (req, res) => {
             if (rowData.rowCount > 0) {
                 res.status(200).send(rowData.rows[0].settings);
             } else {
-                res.status(404).send('User does not exist');
+                next(createError(404));
             }
         })
         .catch(err => {
             console.error(err);
-            res.status(500).send('Unable to get user settings');
+            next(createError(500));
         })
 });
 
-router.post('/settings/', async (req, res) => {
+router.post('/settings/', async (req, res, next) => {
     const { settings } = req.body;
 
     const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken });
@@ -47,12 +47,12 @@ router.post('/settings/', async (req, res) => {
             if (rowData.rowCount > 0) {
                 res.status(201).send(rowData.rows[0]);
             } else {
-                res.status(404).send('User does not exist in database');
+                next(createError(404));
             }
         })
         .catch(err => {
             console.error(err);
-            res.status(500).send('Unable to update settings');
+            next(createError(500));
         })
 });
 
