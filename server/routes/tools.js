@@ -19,8 +19,15 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     const spotifyApi = new SpotifyWebApi({
         accessToken: req.session.accessToken
     });
-    const { body } = await spotifyApi.getMe();
-    const user = body;
+    let user;
+    try {
+        const { body } = await spotifyApi.getMe();
+        user = body;
+    } catch (err) {
+        console.error(err);
+        res.send(err.statusCode).send('Something went wrong with getting your user data.');
+        return;
+    }
     
     let statement = 'SELECT * FROM public.user WHERE uri=$1';
     let userQueryRes = await db.query(statement, [user.uri]);
@@ -65,13 +72,18 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     } else {
         console.log('Utilize Spotify API');
 
-        for await (let playlist of searchPlaylistsForTrack(uri, playlistsToExclude, req.session.accessToken)) {
-            matchingPlaylists.push(playlist);
+        try {
+            for await (let playlist of searchPlaylistsForTrack(uri, playlistsToExclude, req.session.accessToken)) {
+                matchingPlaylists.push(playlist);
+            }
+            handleUpdateQueue.add({ accessToken: req.session.accessToken });
+        } catch (err) {
+            res.status(err.statusCode).send('Something went wrong with getting your playlists.');
+            return;
         }
-        handleUpdateQueue.add({ accessToken: req.session.accessToken });
     }
     
-    res.send(matchingPlaylists);
+    res.status(200).send(matchingPlaylists);
 });
 
 router.post('/true-random-shuffle/', async (req, res) => {
