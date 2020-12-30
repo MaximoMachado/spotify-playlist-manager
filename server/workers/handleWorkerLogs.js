@@ -10,7 +10,8 @@ handleWorkerLogs.process(async (job) => {
             'Handle Update': handleUpdateQueue, 
             'Insert Db': insertDb, 
             'Modify Db': modifyDb, 
-            'Add Playlist': addPlaylistQueue
+            'Add Playlist': addPlaylistQueue,
+            'Handle Playlist Shuffle': handlePlaylistShuffle,
         };
 
         let loggingText = '--- WORKER LOGS START ---\n';
