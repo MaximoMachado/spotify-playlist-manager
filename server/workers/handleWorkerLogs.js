@@ -19,7 +19,7 @@ handleWorkerLogs.process(async (job) => {
         for (let [key, queue] of Object.entries(queues)) {
             loggingText += `${key} Jobs:\n ${JSON.stringify(await queue.getJobCounts())}\n`;
         }
-        loggingText = '--- WORKER LOGS END ---\n';
+        loggingText += '--- WORKER LOGS END ---\n';
         console.log(loggingText);
     } catch (err) {
         console.error(err);
