@@ -6,6 +6,7 @@ var cors = require('cors');
 var session = require('express-session');
 var pgSession = require('connect-pg-simple')(session);
 var { pool } = require('./db');
+var { setupCronJobs } = require('./utils/setupCronJobs');
 
 var authRouter = require('./routes/auth');
 var spotifyRouter = require('./routes/spotify');
@@ -23,22 +24,7 @@ if (process.env.SERVER === 'prod') {
     sessionProxy = true;
 }
 
-var {handleWorkerLogs} = require('./workers/handleWorkerLogs');
-
-// Remove any leftover loggers from when server was last run
-handleWorkerLogs.getRepeatableJobs()
-    .then(loggers => {
-        for (let logger of loggers) {
-            handleWorkerLogs.removeRepeatableByKey(logger.key);
-        }
-    })
-    .catch(err => console.error(err))
-
-handleWorkerLogs.add({}, {
-    repeat: {
-        cron: '0 * * * *' // Every Hour https://crontab.cronhub.io/
-    }
-});
+setupCronJobs();
 
 app.use(logger('dev'));
 app.use(express.json());
