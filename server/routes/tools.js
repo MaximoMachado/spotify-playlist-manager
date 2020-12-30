@@ -52,7 +52,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
 
     if (validUserCache(userQueryRes)) {
         // TODO Use data in database to figure out matching playlists.
-        console.log('Utilize Database');
+        console.log(`${user.display_name} | MPS Utilize Database | ${new Date().toLocaleString()}`);
         const statement = `SELECT DISTINCT public.track_in_playlist.playlist_uri FROM public.track_in_playlist, public.user_saved_playlist
                             WHERE public.user_saved_playlist.user_uri = $1
                             AND public.track_in_playlist.track_uri = $2`;
@@ -60,17 +60,23 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
         const playlistData = await db.query(statement, [user.uri, uri]);
 
         if (playlistData.rowCount > 0) {
-            const playlistUris = playlistData.rows.map(row => row.playlist_uri);
+            const playlistUris = new Set(playlistData.rows.map(row => row.playlist_uri));
 
-            let validUris = new Set(playlistUris);
+            // Set of Playlists from database without the playlists in Playlists to Exclude
+            let validUris = new Set([...playlistUris].filter(uri => !playlistsToExclude.has(uri)));
             for await (let playlist of getUserPlaylists(req.session.accessToken)) {
-                if (validUris.has(playlist.uri) && !playlistsToExclude.has(playlist.uri)) {
+                if (validUris.has(playlist.uri)) {
                     matchingPlaylists.push(playlist);
+                    validUris.delete(playlist.uri);
+                }
+                if (validUris.size === 0) {
+                    // Optimization so once all valid playlists have been found, stop looping
+                    break;
                 }
             }
         }
     } else {
-        console.log('Utilize Spotify API');
+        console.log(`${user.display_name} | MPS Utilize Spotify API | ${new Date().toLocaleString()}`);
         try {
             for await (let playlist of searchPlaylistsForTrack(uri, playlistsToExclude, req.session.accessToken)) {
                 matchingPlaylists.push(playlist);

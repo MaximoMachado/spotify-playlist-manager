@@ -25,6 +25,7 @@ handlePlaylistShuffle.process(async (job) => {
         // Or an error is thrown while attempting to get data from database
         try {
             if (validUserCache(userQueryRes)) {
+                console.log(`${user.display_name} | Shuffle Playlist Utilize Database | ${new Date().toLocaleString()}`)
                 const statement = `SELECT public.track_in_playlist.track_uri FROM public.track_in_playlist
                                     WHERE public.track_in_playlist.playlist_uri = $1
                                     AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`;
@@ -33,6 +34,7 @@ handlePlaylistShuffle.process(async (job) => {
             }
         } finally {
             if (trackUris.length === 0) {
+                console.log(`${user.display_name} | Shuffle Playlist Utilize Spotify API | ${new Date().toLocaleString()}`)
                 for await (let playlistTrack of getPlaylistTracks(playlistId, accessToken)) {
                     const { track } = playlistTrack;
                     if (!playlistTrack.is_local) {
