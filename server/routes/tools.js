@@ -8,7 +8,7 @@ var handlePlaylistShuffle = require('../workers/handlePlaylistShuffle');
 var SpotifyWebApi = require('spotify-web-api-node');
 const validUserCache = require('../utils/validUserCache');
 
-router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
+router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
     /**
      * Based on a song uri, looks through every single playlist saved by the user
      * and returns the playlists that the specified song is within
@@ -25,7 +25,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
         user = body;
     } catch (err) {
         console.error(err);
-        res.send(err.statusCode).send('Something went wrong with getting your user data.');
+        next(createError(err.statusCode));
         return;
     }
     
@@ -71,14 +71,14 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
         }
     } else {
         console.log('Utilize Spotify API');
-
         try {
             for await (let playlist of searchPlaylistsForTrack(uri, playlistsToExclude, req.session.accessToken)) {
                 matchingPlaylists.push(playlist);
             }
             handleUpdateQueue.add({ accessToken: req.session.accessToken });
         } catch (err) {
-            res.status(err.statusCode).send('Something went wrong with getting your playlists.');
+            console.error(err);
+            next(createError(err.statusCode));
             return;
         }
     }
@@ -86,7 +86,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res) => {
     res.status(200).send(matchingPlaylists);
 });
 
-router.post('/true-random-shuffle/', async (req, res) => {
+router.post('/true-random-shuffle/', async (req, res, next) => {
     const { uri, name } = req.body;
 
     handlePlaylistShuffle.add({ uri: uri, name: name, accessToken: req.session.accessToken });
