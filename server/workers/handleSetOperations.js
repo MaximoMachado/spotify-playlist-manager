@@ -245,6 +245,10 @@ symmetricDifference.process(async (job) => {
                 
                 // Gets intersections between every size of combinations of playlists to subtract from union
                 for (let comboLength = 2; comboLength < playlists.length + 1; comboLength++) {
+                    if (i > 10000) {
+                        // Prevents Combinations that will never be completed to avoid hard stalling
+                        break;
+                    }
                     for (let combination of combinations(playlists, comboLength)) {
                         let selectStatements = [];
 
