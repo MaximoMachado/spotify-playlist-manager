@@ -1,33 +1,21 @@
-import { useState, useEffect } from 'react';
 import {VStack, Checkbox, CheckboxGroup,} from '@chakra-ui/react';
 
 
-function CheckboxList({ items, onChange, toggleAllText='Select All', ...style }) {
+function CheckboxList({ items, values, onValuesChange, showToggleAll=false, toggleAllChecked, onToggleAll, toggleAllText='Select All', ...style }) {
     /**
      * List of checkboxes to be displayed in a container with a scrollbar
      * Props:
-     * onChange {function}: Called whenever the checkbox values are changed. Has one argument of values passed in.
-     * toggleAllText {str}: String to be displayed next to toggle all checkbox
+     * values {array}: Selected values from checkboxes
+     * onValueChange {function}: Callback when a checkbox changes
      * items {array}: Array of objects with three fields
      *              key: Unique identifier of item
      *              value: Checkbox value that gets submitted
      *              name: String to be displayed next to checkbox
+     * showToggleAll {boolean}: Whether or not there is a toggle all button
+     * toggleAllChecked {boolean}: Whether or not toggle all checkbox is checked
+     * onToggleAll {function}: Called whenever toggle all checkbox is changed
+     * toggleAllText {str}: String to be displayed next to toggle all checkbox
      */
-
-    const [values, setValues] = useState([]);
-    const [toggleAll, setToggleAll] = useState(false);
-
-    useEffect(() => {
-        if (toggleAll) {
-            setValues(items.map(item => item.value));
-        } else {
-            setValues([]);
-        }
-    }, [toggleAll, items])
-
-    useEffect(() => {
-        onChange(values);
-    }, [values, onChange])
 
     return (
         <VStack 
@@ -41,16 +29,16 @@ function CheckboxList({ items, onChange, toggleAllText='Select All', ...style })
             alignItems='flex-start'
             {...style}
         >
-            <Checkbox 
+            {showToggleAll && <Checkbox 
                 fontWeight='bold'
-                isChecked={toggleAll}
-                onChange={() => setToggleAll(!toggleAll)}
+                isChecked={toggleAllChecked}
+                onChange={() => onToggleAll()}
             >
                 {toggleAllText}
-            </Checkbox>
+            </Checkbox>}
             <CheckboxGroup 
                 value={values}
-                onChange={(value) => setValues(value)}
+                onChange={(values) => onValuesChange(values)}
             >
                 {items.map(item => {
                     return <Checkbox key={item.key} value={item.value}>{item.name}</Checkbox>
