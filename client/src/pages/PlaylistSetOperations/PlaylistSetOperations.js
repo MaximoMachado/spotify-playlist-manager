@@ -145,6 +145,7 @@ function PlaylistSetOperations() {
                             background='green.400'
                             shadow='md'
                             onClick={() => handleCreate()}
+                            isDisabled={selectedPlaylists.length < 2}
                         >
                             Create the Playlist(s)!
                         </Button>
