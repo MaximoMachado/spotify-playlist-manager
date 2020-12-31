@@ -69,6 +69,9 @@ function MultiplePlaylistSearcher() {
         <PageLayout 
             paddingBottom='50px'
             showHeader
+            contentStyle={{
+                minHeight: (loading) ? '93vh' : '0vh' ,
+            }}
         >
             {(!loading && playlists.length === 0 ) && <>
                 <Search 

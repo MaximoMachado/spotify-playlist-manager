@@ -2,7 +2,7 @@ import { Flex, Box } from '@chakra-ui/react';
 import {Header} from '../Header/Header';
 
 
-function PageLayout({ showHeader=false, children, ...style }) {
+function PageLayout({ showHeader=false, children, contentStyle={}, ...style }) {
 
     return (
         <Box
@@ -22,6 +22,7 @@ function PageLayout({ showHeader=false, children, ...style }) {
                 justifySelf='center'
                 direction='column'
                 align='center'
+                {...contentStyle}
             >
                 {children}
             </Flex>
