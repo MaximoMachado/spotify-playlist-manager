@@ -49,7 +49,8 @@ function TrueRandomShuffle() {
     return (
         <PageLayout showHeader>
             {playlists.length > 0 ? 
-            <Playlists 
+            <Playlists
+                marginBottom='25px'
                 fullInfo
                 playlists={playlists}
                 createTopRight={(playlist) => (<Button

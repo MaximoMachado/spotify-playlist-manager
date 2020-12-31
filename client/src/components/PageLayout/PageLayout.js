@@ -10,17 +10,15 @@ function PageLayout({ showHeader=false, children, ...style }) {
             minHeight='100vh'
             maxWidth='100vw'
             background='#EBF8FF'
-            paddingTop='20px'
-            paddingBottom='20px'
             paddingRight={['0px', '20px', '20px', '20px']}
             paddingLeft={['0px', '20px', '20px', '20px']}
             {...style}
         >
-            {showHeader && <Header height='7vh' marginBottom='50px'/>}
+            {showHeader && <Header height='7vh' paddingTop='20px' marginBottom='50px'/>}
             <Flex
                 width='100%'
                 maxWidth='100vw'
-                minHeight={(showHeader) ? '93vh' : '100vh'}
+                minHeight={(showHeader) ? '0vh' : '100vh'}
                 justifySelf='center'
                 direction='column'
                 align='center'
