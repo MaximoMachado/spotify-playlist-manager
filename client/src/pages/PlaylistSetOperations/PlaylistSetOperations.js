@@ -45,8 +45,8 @@ function PlaylistSetOperations() {
     const handleCreate = () => {
         const body = {
             operation: operation,
-            // Array of uri's rather than the value that is "uri;|||;name"
-            playlists: selectedPlaylists.map(encodedStr => encodedStr.split(delimiter)[0]),
+            // uri;|||;name decoded by server
+            playlists: selectedPlaylists,
             differenceBasis: (operation === 'difference') ? differenceBasis : null,
         };
 

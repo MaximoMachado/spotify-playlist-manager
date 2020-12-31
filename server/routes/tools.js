@@ -101,10 +101,16 @@ router.post('/true-random-shuffle', async (req, res, next) => {
 });
 
 router.post('/playlist-set-operations', async (req, res, next) => {
-    const { operation, playlists, differenceBasis } = req.body;
+    let { operation, playlists, differenceBasis } = req.body;
+
+    const delimiter = ';|||;';
+    playlists = playlists.map(playlist => ({
+        uri: playlist.split(delimiter)[0],
+        name: playlist.split(delimiter)[1],
+    }))
 
     try {
-        handleSetOperations[operation].add({ playlists, differenceBasis });
+        handleSetOperations[operation].add({ playlists, differenceBasis, accessToken: req.session.accessToken });
         res.status(202).send('Set Operation sent to Handler');
     } catch (err) {
         res.status(400).send(`${operation} is not a valid set operation`);
