@@ -14,7 +14,6 @@ function PlaylistSetOperations() {
     const [selectedPlaylists, setSelectedPlaylists] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
 
-    // Either 
     const [operation, setOperation] = useState('');
     const [differenceBasis, setDifferenceBasis] = useState(null);
 
@@ -50,9 +49,9 @@ function PlaylistSetOperations() {
             playlists: selectedPlaylists.map(encodedStr => encodedStr.split(delimiter)[0]),
             differenceBasis: (operation === 'difference') ? differenceBasis : null,
         };
+
         axios.post(`${process.env.REACT_APP_API_URL}/tools/playlist-set-operations`, body, { withCredentials: true})
             .then(res => {
-                setStep(0);
                 toast({
                     title: 'Playlist Created!',
                     description: 'Please wait a bit for it to appear in Spotify.',
@@ -72,7 +71,12 @@ function PlaylistSetOperations() {
                 });
             })
     }
-    
+
+    const handleGoBack = () => {
+        setStep(0);
+        setOperation('');
+    }
+
     return (
         <PageLayout showHeader>
             <VStack>
@@ -137,7 +141,7 @@ function PlaylistSetOperations() {
                             background='red.300'
                             marginRight='15px'
                             shadow='md'
-                            onClick={() => setStep(0)}
+                            onClick={handleGoBack}
                         >
                             Go Back
                         </Button>
@@ -209,8 +213,9 @@ function PlaylistSetOperations() {
                         marginTop={5}
                         alignSelf='flex-end'
                         onClick={() => setStep(1)}
+                        isDisabled={(operation === '')}
                     >
-                        Select the Operation
+                        Choose Playlists
                     </Button>
                 </Flex>}
             </VStack>
