@@ -17,6 +17,7 @@ function MultiplePlaylistSearcher() {
     const [loading, setLoading] = useState(false);
 
     const checkPlaylistsForSong = (item) => {
+        window.scrollTo(0, 0);
         setLoading(true);
 
         const { uri } = item;
@@ -59,6 +60,7 @@ function MultiplePlaylistSearcher() {
     };
 
     const handleNewSearch = () => {
+        window.scrollTo(0, 0);
         setPlaylists([]);
         setSong({});
     }
