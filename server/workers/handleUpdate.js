@@ -166,8 +166,10 @@ addPlaylistQueue.process(async (job) => {
             index += 2;
         }
 
-        statement = statement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
-        db.query(statement, values);
+        if (values.length > 0) {
+            statement = statement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
+            db.query(statement, values);
+        }
     } catch (err) {
         console.error(err);
     }
