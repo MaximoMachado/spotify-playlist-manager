@@ -1,12 +1,13 @@
 import { useState, useEffect, } from 'react';
-import { useMediaQuery, VStack, Flex, Box, Heading, Text, Button, useToast, StackDivider, Divider, Select } from '@chakra-ui/react';
+import { VStack, Flex, Box, Heading, Text, Button, useToast, StackDivider, Select } from '@chakra-ui/react';
 import { CheckboxList } from '../../components/CheckboxList/CheckboxList';
 import { PageLayout } from "../../components/PageLayout/PageLayout";
 import axios from 'axios';
 
 function PlaylistSetOperations() {
 
-    const [largerThan48Em] = useMediaQuery('(min-width: 48em) ');
+    const delimiter = ';|||;';
+
     const toast = useToast();
 
     const [playlists, setPlaylists] = useState([]);
@@ -15,6 +16,7 @@ function PlaylistSetOperations() {
 
     // Either 
     const [operation, setOperation] = useState('');
+    const [differenceBasis, setDifferenceBasis] = useState(null);
 
     const [step, setStep] = useState(0);
 
@@ -35,14 +37,40 @@ function PlaylistSetOperations() {
 
     useEffect(() => {
         if (selectAll) {
-            setSelectedPlaylists(playlists.map(playlist => playlist.uri));
+            setSelectedPlaylists(playlists.map(playlist => `${playlist.uri}${delimiter}${playlist.name}`));
         } else {
             setSelectedPlaylists([]);
         }
     }, [selectAll, playlists])
 
     const handleCreate = () => {
-
+        const body = {
+            operation: operation,
+            // Array of uri's rather than the value that is "uri;|||;name"
+            playlists: selectedPlaylists.map(encodedStr => encodedStr.split(delimiter)[0]),
+            differenceBasis: (operation === 'difference') ? differenceBasis : null,
+        };
+        axios.post(`${process.env.REACT_APP_API_URL}/tools/playlist-set-operations`, body, { withCredentials: true})
+            .then(res => {
+                setStep(0);
+                toast({
+                    title: 'Playlist Created!',
+                    description: 'Please wait a bit for it to appear in Spotify.',
+                    status: 'success',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                toast({
+                    title: 'Unable to create playlist.',
+                    description: 'Please wait a bit and then try again.',
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            })
     }
     
     return (
@@ -70,9 +98,9 @@ function PlaylistSetOperations() {
                         height='90%'
                         items={playlists.map(playlist => ({
                             key: playlist.uri,
-                            // Value split by ||| to allow easy access to playlist name in Select 
+                            // Value split by ;|||; to allow easy access to playlist name in Select 
                             // Without going through entire array of playlists to match uri
-                            value: `${playlist.uri}|||${playlist.name}`,
+                            value: `${playlist.uri}${delimiter}${playlist.name}`,
                             name: playlist.name,
                         }))}
                         values={selectedPlaylists}
@@ -82,6 +110,28 @@ function PlaylistSetOperations() {
                         onToggleAll={() => setSelectAll(excludeAll => !excludeAll)}
                         toggleAllText="Select All Playlists"
                     />
+                    {(operation === 'difference') && <>
+                        <Heading 
+                            alignSelf='flex-start' 
+                            size='md' 
+                            margin={3}
+                        >
+                            Select Playlist to take Difference From
+                        </Heading>
+                        <Select
+                            border='1px'
+                            borderColor='gray.300'
+                            shadow='md'
+                            placeholder="Select Playlist to take Difference From"
+                            onChange={(event) => setDifferenceBasis(event.target.value)}
+                        >
+                            {selectedPlaylists.map(encodedStr => {
+                                const uri = encodedStr.split(delimiter)[0];
+                                const name = encodedStr.split(delimiter)[1];
+                                return <option key={uri} value={uri}>{name}</option>
+                            })}
+                        </Select>
+                    </>}
                     <Flex alignSelf='flex-end' marginTop={5}>
                         <Button
                             background='red.300'
@@ -153,7 +203,6 @@ function PlaylistSetOperations() {
                             </Select>
                         </Box>
                     </VStack>
-                    
                     <Button
                         background='blue.200'
                         marginTop={5}
