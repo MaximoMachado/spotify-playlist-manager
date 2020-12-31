@@ -1,4 +1,5 @@
 # Spotify Playlist Manager
+### Live at www.spotifyplaylistmanager.net
 Spotify Playlist Manager (SPM for short) is a website designed to utilize playlists in ways Spotify does not natively support. It is for Spotify users trying to get the most out of their playlists and feel limited by what is available.
 
 # Tools
@@ -8,7 +9,7 @@ This tool looks through your saved playlists for a chosen song and tells you whi
 ### True Random Shuffle
 This tool creates a copy of the selected playlist but with the song ordering shuffled in a purely random manner.
 
-### Playlist Set Operations (WIP)
+### Playlist Set Operations
 This tool creates a new playlist based on two or more other playlists using [set operations](https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations):
 
 i.e. an intersection would create a playlist containing only songs that are in both playlists

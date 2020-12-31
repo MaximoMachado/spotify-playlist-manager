@@ -191,7 +191,10 @@ function PlaylistSetOperations() {
                         </Box>
                         <Box>
                             <Heading size='lg'>Symmetric Difference</Heading>
-                            <Text>Includes only songs from each selected playlist that are not from the other selected playlists.</Text>
+                            <Text>
+                                Includes only songs from each selected playlist that are not from the other selected playlists.
+                                <br />Choosing a large amount of playlists (~10) will not give 100% accurate results.
+                            </Text>
                         </Box>
                         <Box width='70%'>
                             <Heading size='md' marginLeft={3} marginBottom={3}>Select an Operation</Heading>
