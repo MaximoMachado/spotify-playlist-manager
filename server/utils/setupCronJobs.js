@@ -1,4 +1,4 @@
-var {handleWorkerLogs} = require('../workers/handleWorkerLogs');
+//var {handleWorkerLogs} = require('../workers/handleWorkerLogs');
 var { clearDb } = require('../workers/clearDatabase');
 
 
