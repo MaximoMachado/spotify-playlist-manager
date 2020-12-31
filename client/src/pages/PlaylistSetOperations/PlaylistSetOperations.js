@@ -42,6 +42,10 @@ function PlaylistSetOperations() {
         }
     }, [selectAll, playlists])
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [step])
+
     const handleCreate = () => {
         const body = {
             operation: operation,
@@ -54,7 +58,7 @@ function PlaylistSetOperations() {
             .then(res => {
                 toast({
                     title: 'Playlist Created!',
-                    description: 'Please wait a bit for it to appear in Spotify.',
+                    description: 'Please note local songs cannot be transferred over.',
                     status: 'success',
                     duration: 9000,
                     isClosable: true,
