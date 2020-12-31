@@ -21,7 +21,9 @@ function* combinations(array, length) {
 
         // Don't take first item
         for (let combination of combinations(rest, length)) {
-            yield combination;
+            if (combination.length > 0) {
+                yield combination;
+            }
         }
     }
 }
