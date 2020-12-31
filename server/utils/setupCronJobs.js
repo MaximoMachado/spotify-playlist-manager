@@ -4,7 +4,7 @@ var { clearDb } = require('../workers/clearDatabase');
 
 async function setupCronJobs() {
     // Remove any leftover cron jobs from when server was last run
-    handleWorkerLogs.getRepeatableJobs()
+    /*handleWorkerLogs.getRepeatableJobs()
         .then(loggers => {
             for (let logger of loggers) {
                 handleWorkerLogs.removeRepeatableByKey(logger.key);
@@ -16,7 +16,7 @@ async function setupCronJobs() {
         repeat: {
             cron: '0 * * * *' // Every Hour https://crontab.cronhub.io/
         }
-    });
+    });*/
 
     clearDb.getRepeatableJobs()
         .then(loggers => {
