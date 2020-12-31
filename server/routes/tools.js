@@ -7,6 +7,7 @@ var { handleUpdateQueue, insertDb, modifyDb } = require('../workers/handleUpdate
 var handlePlaylistShuffle = require('../workers/handlePlaylistShuffle');
 var SpotifyWebApi = require('spotify-web-api-node');
 const validUserCache = require('../utils/validUserCache');
+const handleSetOperations = require('../workers/handleSetOperations');
 
 router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
     /**
@@ -92,11 +93,22 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
     res.status(200).send(matchingPlaylists);
 });
 
-router.post('/true-random-shuffle/', async (req, res, next) => {
+router.post('/true-random-shuffle', async (req, res, next) => {
     const { uri, name } = req.body;
 
     handlePlaylistShuffle.add({ uri: uri, name: name, accessToken: req.session.accessToken });
     res.status(202).send('Playlist sent to handler for processing');
+});
+
+router.post('/playlist-set-operations', async (req, res, next) => {
+    const { operation, playlists, differenceBasis } = req.body;
+
+    try {
+        handleSetOperations[operation].add({ playlists, differenceBasis });
+        res.status(202).send('Set Operation sent to Handler');
+    } catch (err) {
+        res.status(400).send(`${operation} is not a valid set operation`);
+    }
 });
 
 module.exports = router;
