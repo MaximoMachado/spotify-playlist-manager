@@ -47,7 +47,12 @@ function TrueRandomShuffle() {
     };
 
     return (
-        <PageLayout showHeader>
+        <PageLayout 
+            showHeader
+            contentStyle={{
+                minHeight: (playlists.length > 0) ? '0vh' : '93vh',
+            }}
+        >
             {playlists.length > 0 ? 
             <Playlists
                 marginBottom='25px'
