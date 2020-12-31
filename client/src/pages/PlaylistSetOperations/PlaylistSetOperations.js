@@ -15,7 +15,7 @@ function PlaylistSetOperations() {
     const [selectAll, setSelectAll] = useState(false);
 
     const [operation, setOperation] = useState('');
-    const [differenceBasis, setDifferenceBasis] = useState(null);
+    const [differenceBasis, setDifferenceBasis] = useState('');
 
     const [step, setStep] = useState(0);
 
@@ -75,6 +75,7 @@ function PlaylistSetOperations() {
     const handleGoBack = () => {
         setStep(0);
         setOperation('');
+        setDifferenceBasis('');
     }
 
     return (
@@ -149,7 +150,7 @@ function PlaylistSetOperations() {
                             background='green.400'
                             shadow='md'
                             onClick={() => handleCreate()}
-                            isDisabled={selectedPlaylists.length < 2}
+                            isDisabled={selectedPlaylists.length < 2 || (operation === 'difference' && differenceBasis === '')}
                         >
                             Create the Playlist(s)!
                         </Button>
