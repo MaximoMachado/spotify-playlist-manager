@@ -24,7 +24,7 @@ function Tools() {
                     path='/true-random-shuffle'
                 />
                 <Tool 
-                    title='Playlist Set Operations (WIP)'
+                    title='Playlist Set Operations'
                     description='This tool creates a new playlist based on two or more other playlists using set operations, i.e. an intersection would create a playlist containing only songs that are in both playlists.'
                     path='/playlist-set-operations'
                 />
