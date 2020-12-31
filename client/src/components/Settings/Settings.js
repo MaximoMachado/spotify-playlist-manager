@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { VStack, CircularProgress, Heading, CheckboxGroup, Checkbox, Button, Modal, ModalOverlay, ModalHeader, ModalContent, ModalBody, ModalFooter, ModalCloseButton, ButtonGroup, useToast, Divider } from '@chakra-ui/react';
 import axios from 'axios';
+import { CheckboxList } from '../CheckboxList/CheckboxList';
 
 
 function Settings({ isOpen, onClose, ...style}) {
@@ -113,30 +114,19 @@ function Settings({ isOpen, onClose, ...style}) {
                         <Heading size='md' margin='5px'>Multiple Playlist Searcher</Heading>
                         <Divider />
                         <Heading size='sm' margin='5px'>Songs to Exclude from Search Results</Heading>
-                        <VStack 
-                            marginLeft='10px'
-                            marginRight='10px'
-                            padding='5px'
-                            overflowY='scroll'
-                            overflowX='hidden'
-                            border='1px'
-                            borderColor='gray.300'
-                            alignItems='flex-start'
-                        >
-                            <Checkbox 
-                                fontWeight='bold'
-                                isChecked={excludeAll}
-                                onChange={(event) => setExcludeAll(!excludeAll)}
-                            >
-                                Exclude All Playlists
-                            </Checkbox>
-                            <CheckboxGroup 
-                                value={formValues.playlistsToExclude}
-                                onChange={(value) => setFormValues({ ...formValues,  playlistsToExclude: value})}
-                            >
-                                {playlists.map(playlist => <Checkbox key={playlist.uri} value={playlist.uri}>{playlist.name}</Checkbox>)}   
-                            </CheckboxGroup>
-                        </VStack>
+                        <CheckboxList 
+                            items={playlists.map(playlist => ({
+                                key: playlist.uri,
+                                value: playlist.uri,
+                                name: playlist.name,
+                            }))}
+                            values={formValues.playlistsToExclude}
+                            onValuesChange={(values) => setFormValues({ ...formValues,  playlistsToExclude: values })}
+                            showToggleAll
+                            toggleAllChecked={excludeAll}
+                            onToggleAll={() => setExcludeAll(excludeAll => !excludeAll)}
+                            toggleAllText="Exclude All Playlists"
+                        />
                     </>}
                 </ModalBody>
                 <ModalFooter textColor='white'>
