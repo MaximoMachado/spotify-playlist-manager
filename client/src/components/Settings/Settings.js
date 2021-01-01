@@ -13,7 +13,7 @@ function Settings({ isOpen, onClose, ...style}) {
      */
 
     const toast = useToast();
-    const [formValues, setFormValues] = useState({ playlistsToExclude: [] });
+    const [formValues, setFormValues] = useState({ playlistsToExclude: [], allowDuplicates: true });
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
     const [excludeAll, setExcludeAll] = useState(false);
@@ -127,6 +127,16 @@ function Settings({ isOpen, onClose, ...style}) {
                             onToggleAll={() => setExcludeAll(excludeAll => !excludeAll)}
                             toggleAllText="Exclude All Playlists"
                         />
+                        <Heading size='md' margin='5px' marginTop='15px'>Playlist Set Operations</Heading>
+                        <Divider />
+                        <Checkbox 
+                            marginTop='10px'
+                            alignSelf='flex-start'
+                            isChecked={formValues.allowDuplicates}
+                            onChange={(event) => setFormValues(formValues => ({...formValues, allowDuplicates: !formValues.allowDuplicates}))}
+                        >
+                            Allow Duplicate Songs
+                        </Checkbox>
                     </>}
                 </ModalBody>
                 <ModalFooter textColor='white'>
