@@ -156,7 +156,7 @@ function PlaylistSetOperations() {
                             onClick={() => handleCreate()}
                             isDisabled={selectedPlaylists.length < 2 || (operation === 'difference' && differenceBasis === '')}
                         >
-                            Create the Playlist(s)!
+                            Create the Playlist!
                         </Button>
                     </Flex>
                 </Flex>}
