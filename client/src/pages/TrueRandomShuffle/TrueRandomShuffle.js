@@ -66,7 +66,7 @@ function TrueRandomShuffle() {
                             borderColor='blue.200'
                             onClick={() => handleCreatePlaylist(playlist)}
                             >
-                            Randomize Playlist
+                            Randomize
                         </Button>)}
             /> :
             <CircularProgress 
