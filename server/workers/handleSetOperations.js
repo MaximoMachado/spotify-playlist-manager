@@ -33,7 +33,8 @@ union.process(async (job) => {
                                 AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`);
             }
 
-            const statement = statements.join(' UNION ');
+            const joinStr = (userQueryRes.rows[0].settings.allowDuplicates) ? ' UNION ALL ' : ' UNION ';
+            const statement = statements.join(joinStr);
             const tracksRes = await db.query(statement, playlists.map(playlist => playlist.uri));
 
             tracks = tracksRes.rows.map(row => row.track_uri);
@@ -99,7 +100,8 @@ intersection.process(async (job) => {
                                     AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`);
                 }
 
-                const statement = statements.join(' INTERSECT ');
+                const joinStr = (userQueryRes.rows[0].settings.allowDuplicates) ? ' INTERSECT ALL ' : ' INTERSECT ';
+                const statement = statements.join(joinStr);
                 const tracksRes = await db.query(statement, playlists.map(playlist => playlist.uri));
 
                 tracks = tracksRes.rows.map(row => row.track_uri);
@@ -166,7 +168,8 @@ difference.process(async (job) => {
                                     AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`);
                 }
 
-                const statement = statements.join(' EXCEPT ');
+                const joinStr = (userQueryRes.rows[0].settings.allowDuplicates) ? ' EXCEPT ALL ' : ' EXCEPT ';
+                const statement = statements.join(joinStr);
                 let values = playlists.map(playlist => playlist.uri).filter(uri => uri !== differenceBasis);
 
                 // Place difference basis at the start
@@ -240,7 +243,8 @@ symmetricDifference.process(async (job) => {
                     unionStatements.push(`SELECT track_uri FROM public.track_in_playlist WHERE playlist_uri = $${i + 1}
                                     AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`);
                 }
-                statements.push(unionStatements.join(' UNION '));
+                let joinStr = (userQueryRes.rows[0].settings.allowDuplicates) ? ' UNION ALL ' : ' UNION ';
+                statements.push(unionStatements.join(joinStr));
 
                 
                 // Gets intersections between every size of combinations of playlists to subtract from union
@@ -258,12 +262,13 @@ symmetricDifference.process(async (job) => {
                             AND public.track_in_playlist.track_uri NOT LIKE '%:local:%'`);
                             i++;
                         }
-
-                        statements.push(selectStatements.join(' INTERSECT '));
+                        joinStr = (userQueryRes.rows[0].settings.allowDuplicates) ? ' INTERSECT ALL ' : ' INTERSECT ';
+                        statements.push(selectStatements.join(joinStr));
                     }
                 }
                 
-                const statement = statements.map(statement => `(${statement})`).join(' EXCEPT ');
+                joinStr = (userQueryRes.rows[0].settings.allowDuplicates) ? ' EXCEPT ALL ' : ' EXCEPT ';
+                const statement = statements.map(statement => `(${statement})`).join(joinStr);
                 const tracksRes = await db.query(statement, values);
 
                 tracks = tracksRes.rows.map(row => row.track_uri);
