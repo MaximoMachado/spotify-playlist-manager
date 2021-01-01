@@ -22,7 +22,7 @@ module.exports = {
       
       const maxLength = 500;
       const query = (text.length > maxLength) ? text.slice(0, maxLength / 4) + ' ... ' + text.slice(maxLength * (3 / 4), maxLength) : text;
-      console.log('executed query', { query, duration, rows: res.rowCount });
+      //console.log('executed query', { query, duration, rows: res.rowCount });
       return res;
     },
     async getClient() {
