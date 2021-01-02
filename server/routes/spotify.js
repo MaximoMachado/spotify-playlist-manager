@@ -13,7 +13,7 @@ router.get('/user-playlists', async (req, res, next) => {
         res.status(200).send(playlists);
     } catch (err) {
         console.error(err);
-        next(createError(err.statusCode));
+        res.status(err.statusCode).send('Something went wrong');
     }
 });
 
@@ -35,7 +35,7 @@ router.get('/:func', (req, res, next) => {
             })
             .catch(err => {
                 console.error(err);
-                next(createError(err.statusCode));
+                res.status(err.statusCode).send('Something went wrong');
             })
     } else {
         const newLimit = (limit !== undefined && limit <= 50) ? limit : 20;
@@ -47,7 +47,7 @@ router.get('/:func', (req, res, next) => {
             })
             .catch(err => {
                 console.error(err);
-                next(createError(err.statusCode));
+                res.status(err.statusCode).send('Something went wrong');
             })
     }
 });

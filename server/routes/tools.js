@@ -26,7 +26,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
         user = body;
     } catch (err) {
         console.error(err);
-        next(createError(err.statusCode));
+        res.status(err.statusCode).send('Something went wrong');
         return;
     }
     
@@ -85,7 +85,7 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
             handleUpdateQueue.add({ accessToken: req.session.accessToken });
         } catch (err) {
             console.error(err);
-            next(createError(err.statusCode));
+            res.status(err.statusCode).send('Something went wrong');
             return;
         }
     }

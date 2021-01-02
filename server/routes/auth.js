@@ -14,7 +14,7 @@ router.get('/logout', (req, res, next) => {
     req.session.destroy((err) => {
         if (err) {
             console.error(err);
-            next(createError(500));
+            res.status(500).send('Something went wrong');
         } else {
             res.status(200).send('Successfully logged out.');
         }

@@ -20,12 +20,12 @@ router.get('/settings/', async (req, res, next) => {
             if (rowData.rowCount > 0) {
                 res.status(200).send(rowData.rows[0].settings);
             } else {
-                next(createError(404));
+                res.status(404).send('User not found.');
             }
         })
         .catch(err => {
             console.error(err);
-            next(createError(500));
+            res.status(500).send('Something went wrong');
         })
 });
 
@@ -47,12 +47,12 @@ router.post('/settings/', async (req, res, next) => {
             if (rowData.rowCount > 0) {
                 res.status(201).send(rowData.rows[0]);
             } else {
-                next(createError(404));
+                res.status(404).send('User not found.');
             }
         })
         .catch(err => {
             console.error(err);
-            next(createError(500));
+            res.status(500).send('Something went wrong');
         })
 });
 
