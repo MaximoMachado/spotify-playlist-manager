@@ -56,8 +56,8 @@ insertDb.process(async (job) => {
         await db.query('UPDATE public.user SET ready=true WHERE uri = $1', [user.uri]);
     } catch (err) {
         console.error(err);
-        // Delete user since data was unable to be stored correctly.
-        await db.query('DELETE FROM public.user WHERE uri=$1', [user.uri]);
+        // Unready user since data was unable to be stored correctly.
+        await db.query('UPDATE public.user SET ready=false WHERE uri = $1', [user.uri]);
     }
     console.log('Insert Db Ended');
 });
