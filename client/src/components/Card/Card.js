@@ -57,7 +57,7 @@ function Card({ headerText, description, asideText, images, externalUrl, topRigh
                             overflow='hidden' 
                             textOverflow='ellipsis'
                         >
-                            {decodeURIComponent(headerText)}
+                            {headerText}
                         </Heading>
                     </ExternalHyperLink>
                     
@@ -65,10 +65,10 @@ function Card({ headerText, description, asideText, images, externalUrl, topRigh
                 </Flex>
                 {fullInfo && <>
                     <Text overflow='hidden' textOverflow='ellipsis'>
-                        {decodeURIComponent(description)}
+                        {description}
                     </Text>
                     <Text alignSelf='flex-end'>
-                        {decodeURIComponent(asideText)}
+                        {asideText}
                     </Text>
                 </>}
             </Flex>
