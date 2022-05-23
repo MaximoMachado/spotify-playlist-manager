@@ -82,7 +82,7 @@ ORIGIN_URL: Url of Front-end. Would recommend `http://localhost:3000`
 4. Setup server block in nginx config with relevant urls
 5. Use certbot to configure and add relevant config to those blocks
 6. Get certs for the domain names
-7. Add `/server` to pm2 and start up
+7. Add `/server/bin/www` to pm2 and start up process
 8. Setup PostgreSQL and modify .env files accordingly
 9. Setup Redis
 
