@@ -76,15 +76,15 @@ ORIGIN_URL: Url of Front-end. Would recommend `http://localhost:3000`
 - Redis
     - used for worker queues
 
-1. Install .env files into `/client` and `/server` folders with relevant fields
+1. Install nginx, certbot, redis, and pm2
 2. Build `/client`
-3. Install nginx, certbot, and pm2
-4. Setup server block in nginx config with relevant urls
+3. Link `/client/build` to `/var/www/spotify-playlist-manager` to be used as the root in nginx config
+4. Setup server block in nginx config with relevant urls, using reverse proxy for server and static file server for client
 5. Use certbot to configure and add relevant config to those blocks
 6. Get certs for the domain names
 7. Add `/server/bin/www` to pm2 and start up process
-8. Setup PostgreSQL and modify .env files accordingly
-9. Setup Redis
+8. Setup PostgreSQL and remember fields necessary for .env files like host, username, db, password, etc.
+9. Install .env files into `/client` and `/server` folders with relevant fields
 
 
 # Running
