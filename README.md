@@ -14,7 +14,7 @@ This tool creates a new playlist based on two or more other playlists using [set
 
 i.e. an intersection would create a playlist containing only songs that are in both playlists
 
-# Installation
+# Installation for Development
 `npm install`
 
 Run this command in both the /client and /server directories to install the neccessary npm packages.
@@ -22,6 +22,35 @@ Run this command in both the /client and /server directories to install the necc
 This app also requires the use of two databases, [Redis](https://redis.io/) and [PostGreSql](https://www.postgresql.org/).
 
 No extra setup is required for Redis but the PostGreSql database requires specific columns and tables.
+
+# Installation for Production Server
+
+Steps were used to install on Ubuntu 22.04. Trying to install on a different OS/Distro might cause unexpected problems.
+
+## Needed:
+- Nginx
+    - proper configuration file setup
+- PM2
+    - setup node process to be monitored and started up by pm2
+    - install: `npm install pm2@latest -g`
+- Certbot
+    - works with nginx to update certs when needed
+- PostgreSQL
+    - used for general long term storage
+- Redis
+    - used for worker queues
+
+1. Install nginx, certbot, redis, and pm2
+2. Build `/client`
+3. Link `/client/build` to `/var/www/spotify-playlist-manager` to be used as the root in nginx config
+4. Install `spm-nginx.conf` to `/etc/nginx/sites-enabled` and `/etc/nginx/sites-available`
+5. Use certbot to configure and add relevant config to those blocks
+6. Get certs for the domain names
+7. Add `/server/bin/www` to pm2 and start up process
+8. Setup PostgreSQL and remember fields necessary for .env files like host, username, db, password, etc.
+9. Install .env files into `/client` and `/server` folders with relevant fields
+
+
 
 # PostGreSql Database Setup
 
@@ -60,7 +89,6 @@ STALE_DATA_TIMEOUT: Used to determine when to refresh database. Would recommend 
 PORT: Port of Node.js Server. Would recommend `3001`
 
 ORIGIN_URL: Url of Front-end. Would recommend `http://localhost:3000`
-
 
 # Running
 `npm start`

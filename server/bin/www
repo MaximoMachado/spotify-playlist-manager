@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 require('dotenv').config();
-var app = require('../App');
+var app = require('../App.js');
 var debug = require('debug')('server:server');
 var http = require('http');
 
