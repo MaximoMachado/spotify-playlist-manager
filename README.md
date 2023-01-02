@@ -19,10 +19,6 @@ i.e. an intersection would create a playlist containing only songs that are in b
 
 Run this command in both the /client and /server directories to install the neccessary npm packages.
 
-This app also requires the use of two databases, [Redis](https://redis.io/) and [PostGreSql](https://www.postgresql.org/).
-
-No extra setup is required for Redis but the PostGreSql database requires specific columns and tables.
-
 # Installation for Production Server
 
 Steps were used to install on Ubuntu 22.04. Trying to install on a different OS/Distro might cause unexpected problems.
@@ -30,31 +26,33 @@ Steps were used to install on Ubuntu 22.04. Trying to install on a different OS/
 ## Needed:
 - Nginx
     - proper configuration file setup
+- Certbot
+    - works with nginx to update certs when needed
+- Docker and Docker-Compose
+    - used now for installing server side dependencies with ease
 - PM2
     - setup node process to be monitored and started up by pm2
     - install: `npm install pm2@latest -g`
-- Certbot
-    - works with nginx to update certs when needed
 - PostgreSQL
     - used for general long term storage
 - Redis
     - used for worker queues
 
-1. Install nginx, certbot, redis, and pm2
-2. Build `/client`
-3. Link `/client/build` to `/var/www/spotify-playlist-manager` to be used as the root in nginx config
-4. Install `spm-nginx.conf` to `/etc/nginx/sites-enabled` and `/etc/nginx/sites-available`
-5. Use certbot to configure and add relevant config to those blocks
-6. Get certs for the domain names
-7. Add `/server/bin/www` to pm2 and start up process
-8. Setup PostgreSQL and remember fields necessary for .env files like host, username, db, password, etc.
+1. Install nginx, certbot, docker, docker-compose, and pm2
+2. Include two .env files, 1 in `/client` and one in `/server` with appropriate env fields
+3. Build `/client`
+4. Link `/client/build` to `/var/www/spotify-playlist-manager` to be used as the root in nginx config
+5. Install `spm-nginx.conf` to `/etc/nginx/sites-enabled` and `/etc/nginx/sites-available`
+6. Use certbot to configure and add relevant config to those blocks
+7. Get certs for the domain names
+8. Start up docker image with `npm run start` in `/server`
 9. Install .env files into `/client` and `/server` folders with relevant fields
 
 
 
 # PostGreSql Database Setup
 
-Create a database and then import/restore `spm.sql` into it.
+Docker handles the creation of the database, to change the schema, modify `spm.sql` and restart the container.
 
 # ENV Configs
 ### /client
@@ -89,6 +87,8 @@ STALE_DATA_TIMEOUT: Used to determine when to refresh database. Would recommend 
 PORT: Port of Node.js Server. Would recommend `3001`
 
 ORIGIN_URL: Url of Front-end. Would recommend `http://localhost:3000`
+
+SERVER: Either 'dev' or 'prod'. Used for error messages that get returned to client.
 
 # Running
 `npm start`
