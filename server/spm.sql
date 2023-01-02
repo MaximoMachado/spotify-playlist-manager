@@ -27,7 +27,7 @@ SET default_table_access_method = heap;
 -- Name: session; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.session (
+CREATE TABLE IF NOT EXISTS public.session (
     sid character varying NOT NULL,
     sess json NOT NULL,
     expire timestamp(6) without time zone NOT NULL
@@ -41,7 +41,7 @@ ALTER TABLE public.session OWNER TO postgres;
 -- Name: track_in_playlist; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.track_in_playlist (
+CREATE TABLE IF NOT EXISTS public.track_in_playlist (
     playlist_uri text NOT NULL,
     track_uri text NOT NULL
 );
@@ -54,7 +54,7 @@ ALTER TABLE public.track_in_playlist OWNER TO postgres;
 -- Name: user; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."user" (
+CREATE TABLE IF NOT EXISTS public."user" (
     uri text NOT NULL,
     last_updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     ready boolean DEFAULT false NOT NULL,
@@ -69,7 +69,7 @@ ALTER TABLE public."user" OWNER TO postgres;
 -- Name: user_saved_playlist; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.user_saved_playlist (
+CREATE TABLE IF NOT EXISTS public.user_saved_playlist (
     user_uri text NOT NULL,
     playlist_uri text NOT NULL
 );
