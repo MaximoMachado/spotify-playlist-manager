@@ -20,7 +20,38 @@ function MultiplePlaylistSearcher() {
     const searchForCurrentlyPlayingSong = () => {
         axios.get(`${process.env.REACT_APP_API_URL}/spotify/getMyCurrentPlayingTrack`, { withCredentials: true })
             .then(res => {
-                console.log(res);
+                const track = res?.data?.body?.item;
+                if (!(track === undefined || track === null)) {
+                    // There is a currently playing track, whether paused or unpaused
+                    const artists = track.artists;
+                    const artist_str = (artists.length > 0) ? ` by ${artists[0].name}` : '';
+                    toast({
+                        title: `Searching for ${decodeURIComponent(track.name)}${decodeURIComponent(artist_str)}`,
+                        description: '',
+                        status: 'success',
+                        duration: 4000,
+                        isClosable: true,
+                    });
+                    if (!track.is_local) {
+                        checkPlaylistsForSong(track);
+                    } else {
+                        toast({
+                            title: "Spotify's API does not support searching for local songs",
+                            description: 'Try searching another song.',
+                            status: 'warning',
+                            duration: 9000,
+                            isClosable: true,
+                        });
+                    }
+                } else {
+                    toast({
+                        title: 'There is no song currently playing.',
+                        description: 'Try searching another song.',
+                        status: 'warning',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
             })
             .catch(err => {
                 console.error(err);
