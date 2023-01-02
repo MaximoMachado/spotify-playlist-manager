@@ -29,7 +29,7 @@ services:
   # address of this container.
   db:
     image: postgres:14.1-alpine
-    container_name: spm-postgres
+    container_name: postgres
     restart: always
     environment:
       # You can set the value of environment variables
@@ -39,9 +39,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    ports:
+    expose:
       # Standard port for PostgreSQL databases
-      - "5432:5432"
+      - "5432"
     volumes:
       # When the PostgreSQL container is started it will run any scripts
       # provided in the `docker-entrypoint-initdb.d` directory, this connects
