@@ -5,7 +5,7 @@ var { handleUpdateQueue } = require('../workers/handleUpdate');
 
 // Authentication with Spotify API
 router.get('/login', (req, res, next) => {
-    const scopes = ['playlist-modify-public', 'playlist-modify-private', 'playlist-read-private', 'playlist-read-collaborative'];
+    const scopes = ['playlist-modify-public', 'playlist-modify-private', 'playlist-read-private', 'playlist-read-collaborative', 'user-read-currently-playing'];
 
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
 });

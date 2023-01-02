@@ -2,7 +2,7 @@ var Queue = require('bull');
 var SpotifyWebApi = require('spotify-web-api-node');
 var db = require('../db');
 
-const clearDb = new Queue('clear-db');
+const clearDb = new Queue('clear-db', process.env.REDIS_URL);
 
 clearDb.process((job) => {
     /**

@@ -4,13 +4,14 @@ import { useHistory } from 'react-router-dom';
 import { useToast, Flex, Input, InputGroup, Button, InputRightAddon } from '@chakra-ui/react';
 import { StyledVStack } from "../StyledVStack/StyledVStack";
 
-function Search({ searchUrl, searchPlaceholderText, createComponents, ...style}) {
+function Search({ searchUrl, searchPlaceholderText, createComponents, searchForCurrentlyPlayingSong, ...style}) {
     /**
      * Component that renders a searchbar and the results that appear underneath it
      * Props:
      * searchUrl {str}: Url to get search results from. Should have search, limit, and offset parameters
      * searchPlaceHolderText {str}: Used for Search Input placeholder text and screenreaders
      * createComponents {func}: Recieves data from url and returns array of ReactComponents (Card) to render
+     * searchForCurrentlyPlayingSong {func}: Takes no arguments and returns nothing to handle button press
      */
     
     const history = useHistory();
@@ -29,7 +30,7 @@ function Search({ searchUrl, searchPlaceholderText, createComponents, ...style})
                     toast({
                         title: 'Please login first and try again.',
                         status: 'warning',
-                        duration: 9000,
+                        duration: null,
                         isClosable: true,
                     });
                 } else {
@@ -37,7 +38,7 @@ function Search({ searchUrl, searchPlaceholderText, createComponents, ...style})
                         title: 'Something went wrong.',
                         description: 'Please wait a bit and then try again.',
                         status: 'error',
-                        duration: 9000,
+                        duration: null,
                         isClosable: true,
                     });
                 }
@@ -65,12 +66,25 @@ function Search({ searchUrl, searchPlaceholderText, createComponents, ...style})
                     aria-label={searchPlaceholderText}
                 />
                 <InputRightAddon padding={0}>
-                    <Button 
+                    <Button
+                        background='blue.300'
+                        border='1px solid'
                         width='100%'
-                        height='100%' 
+                        height='100%'
                         onClick={handleSearch}
                     >
                         Search
+                    </Button>
+                </InputRightAddon>
+                <InputRightAddon padding={0}>
+                    <Button
+                        background='orange.400'
+                        border='1px solid'
+                        width='100%'
+                        height='100%' 
+                        onClick={searchForCurrentlyPlayingSong}
+                    >
+                        Playing Now
                     </Button>
                 </InputRightAddon>
             </InputGroup>

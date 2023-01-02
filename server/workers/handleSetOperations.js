@@ -6,10 +6,10 @@ var validUserCache = require('../utils/validUserCache');
 var { addPlaylistQueue, handleUpdateQueue } = require('./handleUpdate');
 var { combinations } = require('../utils/combinations');
 
-const union = new Queue('playlist-set-operations-union');
-const intersection = new Queue('playlist-set-operations-intersection');
-const difference = new Queue('playlist-set-operations-difference');
-const symmetricDifference = new Queue('playlist-set-operations-symmetric-difference');
+const union = new Queue('playlist-set-operations-union', process.env.REDIS_URL);
+const intersection = new Queue('playlist-set-operations-intersection', process.env.REDIS_URL);
+const difference = new Queue('playlist-set-operations-difference', process.env.REDIS_URL);
+const symmetricDifference = new Queue('playlist-set-operations-symmetric-difference', process.env.REDIS_URL);
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 

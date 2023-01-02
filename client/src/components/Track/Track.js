@@ -26,7 +26,7 @@ function Track({ track, topRight, fullInfo=false, ...style }) {
 
         const length = Math.floor(track.duration_ms / 1000);
         const minutes = Math.floor(length / 60).toString();
-        const seconds = (length % 60).toString();
+        const seconds = (length % 60).toString().padStart(2, '0');
         
         text += ` | ${minutes}:${seconds}`
         setAsideText(text);

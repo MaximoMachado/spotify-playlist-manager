@@ -2,7 +2,7 @@ var Queue = require('bull');
 var { handleUpdateQueue, insertDb, modifyDb, addPlaylistQueue } = require('./handleUpdate');
 var handlePlaylistShuffle = require('./handlePlaylistShuffle');
 
-const handleWorkerLogs = new Queue('queue-logger');
+const handleWorkerLogs = new Queue('queue-logger', process.env.REDIS_URL);
 
 handleWorkerLogs.process(async (job) => {
     try {

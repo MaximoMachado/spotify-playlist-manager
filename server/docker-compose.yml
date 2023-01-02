@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  # These are the configurations for our Node app
+  # When Docker Compose starts this container it will automatically
+  # use the Dockerfile in the directory to configure it
+  app:
+    build: .
+    container_name: spm-server
+    depends_on:
+      # Our app does not work without our database
+      # so this ensures our database is loaded first
+      - db
+      - queue
+    ports:
+      - "3001:3001"
+    environment:
+      - REDIS_URL=redis://spm-redis
+    volumes:
+      # Maps our current project directory `.` to
+      # our working directory in the container
+      - ./:/usr/src/app/
+      # node_modules workaround for volumes
+      # https://stackoverflow.com/a/32785014
+      - /usr/src/app/node_modules
+
+  # This is the configuration for our PostgreSQL database container
+  # Note the `postgres` name is important, in our Node app when we refer
+  # to  `host: "postgres"` that value is mapped on the network to the 
+  # address of this container.
+  db:
+    image: postgres:14.1-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      # You can set the value of environment variables
+      # in your docker-compose.yml file
+      # Our Node app will use these to connect
+      # to the database
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    expose:
+      # Standard port for PostgreSQL databases
+      - "5432"
+    volumes:
+      # When the PostgreSQL container is started it will run any scripts
+      # provided in the `docker-entrypoint-initdb.d` directory, this connects
+      # our seed file to that directory so that it gets run
+      - ./spm.sql:/docker-entrypoint-initdb.d/spm.sql
+  queue:
+    image: redis:7-alpine
+    restart: always
+    container_name: spm-redis
+    expose:
+      - "6379"

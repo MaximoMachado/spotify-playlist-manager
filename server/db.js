@@ -1,4 +1,11 @@
 const { Pool } = require('pg');
+const Redis =  require('ioredis');
+
+
+/**
+ * Initialize Redis Server
+ */
+const redis = new Redis(process.env.REDIS_URL);
 
 /**
  * Initialize PostGreSql Server
