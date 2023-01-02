@@ -4,10 +4,10 @@ var db = require('../db');
 const validUserCache = require('../utils/validUserCache');
 const { getUserPlaylists, getPlaylistTracks } = require('../utils/getAll');
 
-const handleUpdateQueue = new Queue('handle-update');
-const addPlaylistQueue = new Queue('add-playlist');
-const insertDb = new Queue('insert-db');
-const modifyDb = new Queue('modify-db');
+const handleUpdateQueue = new Queue('handle-update', process.env.REDIS_URL);
+const addPlaylistQueue = new Queue('add-playlist', process.env.REDIS_URL);
+const insertDb = new Queue('insert-db', process.env.REDIS_URL);
+const modifyDb = new Queue('modify-db', process.env.REDIS_URL);
 
 
 insertDb.process(async (job) => {

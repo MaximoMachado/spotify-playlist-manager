@@ -6,7 +6,7 @@ var validUserCache = require('../utils/validUserCache');
 var db = require('../db');
 var { addPlaylistQueue } = require('./handleUpdate');
 
-const handlePlaylistShuffle = new Queue('handle-playlist-shuffle');
+const handlePlaylistShuffle = new Queue('handle-playlist-shuffle', process.env.REDIS_URL);
 
 handlePlaylistShuffle.process(async (job) => {
     const { uri, name, accessToken } = job.data;
