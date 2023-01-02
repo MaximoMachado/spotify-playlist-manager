@@ -16,6 +16,17 @@ function MultiplePlaylistSearcher() {
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(false);
 
+
+    const searchForCurrentlyPlayingSong = () => {
+        axios.get(`${process.env.REACT_APP_API_URL}/spotify/getMyCurrentPlayingTrack`, { withCredentials: true })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+
     const checkPlaylistsForSong = (item) => {
         window.scrollTo(0, 0);
         setLoading(true);
@@ -31,7 +42,7 @@ function MultiplePlaylistSearcher() {
                         title: 'Song is not in any of your playlists.',
                         description: 'Try searching another song.',
                         status: 'success',
-                        duration: 9000,
+                        duration: null,
                         isClosable: true,
                     });
                 }
@@ -44,7 +55,7 @@ function MultiplePlaylistSearcher() {
                     toast({
                         title: 'Please login first and try again.',
                         status: 'warning',
-                        duration: 9000,
+                        duration: null,
                         isClosable: true,
                     });
                 } else {
@@ -52,7 +63,7 @@ function MultiplePlaylistSearcher() {
                         title: 'Something went wrong.',
                         description: 'Please wait a bit and then try again.',
                         status: 'error',
-                        duration: 9000,
+                        duration: null,
                         isClosable: true,
                     });
                 }
@@ -77,6 +88,7 @@ function MultiplePlaylistSearcher() {
                 <Search 
                     searchPlaceholderText='Search for a Song'
                     searchUrl={`${process.env.REACT_APP_API_URL}/spotify/searchTracks`}
+                    searchForCurrentlyPlayingSong={searchForCurrentlyPlayingSong}
                     createComponents={res => {
                         const { items } = res.data.body.tracks;
 
@@ -85,7 +97,7 @@ function MultiplePlaylistSearcher() {
                                 title: 'No Results Found',
                                 description: 'Try a different search.',
                                 status: 'warning',
-                                duration: 9000,
+                                duration: null,
                                 isClosable: true,
                             });
                             return [];
