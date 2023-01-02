@@ -17,6 +17,7 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "pg": "^8.5.1",
+    "pm2": "^5.2.2",
     "spotify-web-api-node": "^5.0.0"
   }
 }
