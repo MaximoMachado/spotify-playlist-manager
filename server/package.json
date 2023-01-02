@@ -5,7 +5,7 @@
   "scripts": {
     "start": "docker-compose up --build",
     "server": "node ./bin/www",
-    "pm2": "pm2 start processes.json --no-daemon"
+    "pm2": "pm2-runtime processes.json"
   },
   "dependencies": {
     "bull": "^3.20.0",
