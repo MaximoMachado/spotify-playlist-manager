@@ -62,7 +62,7 @@ insertDb.process(async (job) => {
                     'INSERT INTO public.track(uri, track_name, duration_ms, num_artists, first_artist_name) 
                     VALUES ($1, $2, $3, $4, $5), (...),...,(...) ON CONFLICT (...) DO UPDATE'
                 */
-                trackDetailsStatement = trackDetailsStatement.slice(0, -1) + ' ON CONFLICT (uri, track_name, duration_ms, num_artists, first_artist_name) DO NOTHING';
+                trackDetailsStatement = trackDetailsStatement.slice(0, -1) + ' ON CONFLICT (uri) DO NOTHING';
                 await db.query(trackDetailsStatement, trackDetailsArray);
                 /* Statement will have final form of: (One query per playlist)
                     'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) 
