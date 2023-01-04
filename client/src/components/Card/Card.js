@@ -18,7 +18,6 @@ function Card({ headerText, description, asideText, images, externalUrl, topRigh
     const [srcSet, setSrcSet] = useState('');
 
     useEffect(() => {
-        // TODO Figure out way to parse special characters like '&#x27;'
         const formattedSrcSet = images.map(image => {
                 const imageWidth = (image.width !== null) ? ` ${image.width}w` : '';
 
