@@ -1,4 +1,5 @@
 var SpotifyWebApi = require('spotify-web-api-node');
+var he = require('he');
 
 async function* getAllPages(spotifyApiFunc, id, limit, accessToken) {
     const spotifyApi = new SpotifyWebApi({ accessToken: accessToken });
@@ -43,11 +44,13 @@ async function* getAll(spotifyApiFunc, id, limit, accessToken) {
 
  async function* getUserPlaylists(accessToken) {
     /**
-     * Gets all playlists that a user follows
+     * Gets all playlists that a user follows and parses html entities out of playlist name and description
      * Params:
      * accessToken {str}: Access Token provided by user authentication
      */
     for await (let playlist of getAll('getUserPlaylists', null, 50, accessToken)) {
+        playlist.name = he.decode(playlist.name);
+        playlist.description = he.decode(playlist.description);
         yield playlist;
     }
 }
