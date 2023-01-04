@@ -28,22 +28,42 @@ insertDb.process(async (job) => {
         for await (let playlist of getUserPlaylists(accessToken)) {
             // Add playlist to database
             const statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
-            db.query(statement, [user.uri, playlist.uri]);
+            await db.query(statement, [user.uri, playlist.uri]);
 
             let tracksStatement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
             let tracksArray = [];
             let index = 1;
+            let trackDetailsStatement = 'INSERT INTO public.track(uri, track_name, duration_ms, num_artists, first_artist_name) VALUES';
+            let trackDetailsArray = [];
+            let detailsIndex = 1;
             for await (let playlistTrack of getPlaylistTracks(playlist.id, accessToken)) {
                 const { track } = playlistTrack;
+                const { uri, name, artists, duration_ms } = track;
                 tracksArray.push(playlist.uri);
                 tracksArray.push(track.uri);
 
                 tracksStatement += ` ($${index}, $${index + 1}),`;
                 index += 2;
+
+                trackDetailsArray.push(uri);
+                trackDetailsArray.push(name);
+                trackDetailsArray.push(duration_ms);
+                trackDetailsArray.push(artists.length);
+                trackDetailsArray.push(artists[0].name);
+
+                trackDetailsStatement += ` ($${detailsIndex}, $${detailsIndex + 1}, $${detailsIndex + 2}, $${detailsIndex + 3}, $${detailsIndex + 4}),`;
+
+                detailsIndex += 5;
             }
 
             // Add playlist tracks to database if they exist
             if (tracksArray.length > 0) {
+                /* Statement will have final form of: (One query per playlist)
+                    'INSERT INTO public.track(uri, track_name, duration_ms, num_artists, first_artist_name) 
+                    VALUES ($1, $2, $3, $4, $5), (...),...,(...) ON CONFLICT (...) DO UPDATE'
+                */
+                trackDetailsStatement = trackDetailsStatement.slice(0, -1) + ' ON CONFLICT (uri, track_name, duration_ms, num_artists, first_artist_name) DO NOTHING';
+                await db.query(trackDetailsStatement, trackDetailsArray);
                 /* Statement will have final form of: (One query per playlist)
                     'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) 
                     VALUES ($1, $2), (...),...,(...) ON CONFLICT (playlist_uri, track_uri) DO NOTHING'
@@ -154,7 +174,7 @@ addPlaylistQueue.process(async (job) => {
     console.log(`Add Playlist Started:\nUser: ${userUri} | Playlist: ${playlistUri} | Track #: ${trackUris.length}`);
     try {
         let statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
-        db.query(statement, [userUri, playlistUri]);
+        await db.query(statement, [userUri, playlistUri]);
 
         statement = 'INSERT INTO public.track_in_playlist(playlist_uri, track_uri) VALUES';
         let values = [];
@@ -168,7 +188,7 @@ addPlaylistQueue.process(async (job) => {
 
         if (values.length > 0) {
             statement = statement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
-            db.query(statement, values);
+            await db.query(statement, values);
         }
     } catch (err) {
         console.error(err);
