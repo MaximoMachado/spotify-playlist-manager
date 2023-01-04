@@ -26,7 +26,7 @@ function MultiplePlaylistSearcher() {
                     const artists = track.artists;
                     const artist_str = (artists.length > 0) ? ` by ${artists[0].name}` : '';
                     toast({
-                        title: `Searching for ${decodeURIComponent(track.name)}${decodeURIComponent(artist_str)}`,
+                        title: `Searching for ${track.name}${artist_str}`,
                         description: '',
                         status: 'success',
                         duration: 4000,
