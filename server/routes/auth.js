@@ -48,7 +48,7 @@ async function refreshTokenHandler(req, spotifyApi, expires_in) {
 function refreshTokenInterval(req, spotifyApi, expires_in) {
     setTimeout(async () => {
         refreshTokenHandler(req, spotifyApi, expires_in);
-    }, expires_in / 2 * 1000);
+    }, (3 * (1000 * expires_in)) / 4);
 }
 
 router.get('/callback', async (req, res, next) => {
