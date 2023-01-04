@@ -9,7 +9,7 @@ router.get('/user-playlists', async (req, res, next) => {
         for await (let playlist of getUserPlaylists(req.session.accessToken)) {
             playlists.push(playlist);
         }
-
+        
         res.status(200).send(playlists);
     } catch (err) {
         console.error(err);
