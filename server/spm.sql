@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS public.user_saved_playlist (
 ALTER TABLE public.user_saved_playlist OWNER TO postgres;
 
 CREATE TABLE IF NOT EXISTS public.track (
-    uri text PRIMARY KEY NOT NULL UNIQUE,
+    uri text PRIMARY KEY,
     track_name text NOT NULL,
     duration_ms BIGINT NOT NULL,
     num_artists BIGINT NOT NULL,
