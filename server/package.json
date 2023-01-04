@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "docker-compose up --build",
+    "start": "docker-compose up",
     "server": "node ./bin/www",
     "pm2": "pm2-runtime processes.json"
   },
