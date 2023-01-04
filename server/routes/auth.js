@@ -28,8 +28,7 @@ async function refreshTokenHandler(req, spotifyApi, expires_in) {
         const data = await spotifyApi.refreshAccessToken();
         const access_token = data.body['access_token'];
 
-        //console.log('The access token has been refreshed!');
-        //console.log('access_token:', access_token);
+        console.log('access_token refreshed:', access_token);
 
         req.session.accessToken = access_token;
         spotifyApi.setAccessToken(access_token);
