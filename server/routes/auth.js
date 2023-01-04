@@ -21,6 +21,37 @@ router.get('/logout', (req, res, next) => {
     });
 });
 
+async function refreshTokenHandler(req, spotifyApi, expires_in) {
+    // Set to correct user before refreshing
+    spotifyApi.setRefreshToken(req.session.refreshToken);
+    try {
+        const data = await spotifyApi.refreshAccessToken();
+        const access_token = data.body['access_token'];
+
+        //console.log('The access token has been refreshed!');
+        //console.log('access_token:', access_token);
+
+        req.session.accessToken = access_token;
+        spotifyApi.setAccessToken(access_token);
+
+        refreshTokenInterval(req, spotifyApi, expires_in);
+    } catch (err) {
+        console.warn(`Refresh token failed to refresh: ${req.session.refreshAccessToken}\nError: ${err}`);
+    }
+}
+
+/**
+ * Will periodically refresh access token, stops attempting refresh on first failure
+ * @param {*} req Original Request token is from
+ * @param {*} spotifyApi SpotifyApi object to update
+ * @param {*} expires_in Time Access Token will expire in
+ */
+function refreshTokenInterval(req, spotifyApi, expires_in) {
+    setTimeout(async () => {
+        refreshTokenHandler(req, spotifyApi, expires_in);
+    }, expires_in / 2 * 1000);
+}
+
 router.get('/callback', async (req, res, next) => {
     /**
      * Makes request for Spotify Access and Refresh Tokens
@@ -60,18 +91,7 @@ router.get('/callback', async (req, res, next) => {
             handleUpdateQueue.add({ accessToken: req.session.accessToken });
             res.redirect(`${process.env.ORIGIN_URL}/tools`);
 
-            setInterval(async () => {
-                // Set to correct user before refreshing
-                spotifyApi.setRefreshToken(req.session.refreshToken);
-                const data = await spotifyApi.refreshAccessToken();
-                const access_token = data.body['access_token'];
-
-                //console.log('The access token has been refreshed!');
-                //console.log('access_token:', access_token);
-
-                req.session.accessToken = access_token;
-                spotifyApi.setAccessToken(access_token);
-            }, expires_in / 2 * 1000);
+            refreshTokenInterval(req, spotifyApi, expires_in);
         })
         .catch(error => {
             console.error('Error getting Tokens:', error);
