@@ -54,11 +54,17 @@ router.get('/multiple-playlist-searcher/:uri', async (req, res, next) => {
     if (validUserCache(userQueryRes)) {
         // TODO Use data in database to figure out matching playlists.
         console.log(`${user.display_name} | MPS Utilize Database | ${new Date().toLocaleString()}`);
-        const statement = `SELECT DISTINCT public.track_in_playlist.playlist_uri FROM public.track_in_playlist, public.user_saved_playlist
-                            WHERE public.user_saved_playlist.user_uri = $1
-                            AND public.track_in_playlist.track_uri = $2`;
+        const statement = `SELECT DISTINCT public.track_in_playlist.playlist_uri FROM public.track_in_playlist
+                            FULL JOIN public.user_saved_playlist ON public.user_saved_playlist.playlist_uri = public.track_in_playlist.playlist_uri
+                            FULL JOIN public.track ON public.track.uri = public.track_in_playlist.track_uri
+                            WHERE public.user_saved_playlist.user_uri = $1 AND (public.track_in_playlist.track_uri = $2 
+                                    OR (public.track.track_name = $3 AND public.track.duration_ms = $4 
+                                        AND public.track.num_artists = $5 AND public.track.first_artist_name = $6))`;
 
-        const playlistData = await db.query(statement, [user.uri, uri]);
+        const trackId = uri.split(":")[2];
+        const response = await spotifyApi.getTrack(trackId);
+        const track = response.body;
+        const playlistData = await db.query(statement, [user.uri, uri, track.name, track.duration_ms, track.artists.length, track.artists[0].name]);
 
         if (playlistData.rowCount > 0) {
             const playlistUris = new Set(playlistData.rows.map(row => row.playlist_uri));
