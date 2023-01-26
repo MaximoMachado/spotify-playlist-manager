@@ -77,6 +77,17 @@ CREATE TABLE IF NOT EXISTS public.user_saved_playlist (
 
 ALTER TABLE public.user_saved_playlist OWNER TO postgres;
 
+CREATE TABLE IF NOT EXISTS public.track (
+    uri text PRIMARY KEY UNIQUE,
+    track_name text NOT NULL,
+    duration_ms BIGINT NOT NULL,
+    num_artists BIGINT NOT NULL,
+    first_artist_name text NOT NULL
+);
+
+
+ALTER TABLE public.track OWNER TO postgres;
+
 --
 -- TOC entry 2877 (class 2606 OID 16583)
 -- Name: session session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
@@ -138,6 +149,12 @@ CREATE INDEX "IDX_session_expire" ON public.session USING btree (expire);
 ALTER TABLE ONLY public.user_saved_playlist
     ADD CONSTRAINT user_uri FOREIGN KEY (user_uri) REFERENCES public."user"(uri) NOT VALID;
 
+
+--
+-- Add foreign key constraint that links track_in_playlist to track table
+--
+ALTER TABLE ONLY public.track_in_playlist
+    ADD CONSTRAINT track_uri FOREIGN KEY (track_uri) REFERENCES public."track"(uri) NOT VALID;
 
 -- Completed on 2020-12-31 19:03:17
 
