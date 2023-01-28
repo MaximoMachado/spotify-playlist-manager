@@ -24,8 +24,6 @@ async function* searchPlaylistsForTrack(targetUri, playlistsToExclude, accessTok
         for await (let playlistTrack of getPlaylistTracks(playlist.id, accessToken)) {
             let { track } = playlistTrack;
             let { uri, name, artists, duration_ms } = track;
-            console.log(targetTrack);
-            console.log(track);
             
             if (uri === targetTrack.uri) {
 
