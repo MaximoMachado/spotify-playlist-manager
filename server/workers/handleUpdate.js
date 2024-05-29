@@ -52,10 +52,10 @@ insertDb.process(async (job) => {
                 trackDetailsArray.push(uri);
                 trackDetailsArray.push(name);
                 trackDetailsArray.push(duration_ms);
-                if (type == "track") {
+                if (type === "track") {
                     trackDetailsArray.push(artists.length);
                     trackDetailsArray.push(artists[0].name);
-                } else if (type == "episode") {
+                } else if (type === "episode") {
                     trackDetailsArray.push(1);
                     trackDetailsArray.push(track.show.name);
                 }
