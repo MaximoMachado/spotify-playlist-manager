@@ -14,6 +14,7 @@ function Playlist({ playlist, topRight, fullInfo=false, ...style}) {
     const [externalUrl, setExternalUrl] = useState('');
 
     useEffect(() => {
+        console.log(playlist)
         if (playlist.external_urls !== undefined) {
             setExternalUrl(playlist.external_urls.spotify);
         }

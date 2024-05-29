@@ -11,18 +11,14 @@ function Playlists({ playlists, createTopRight=null, fullInfo=false, ...style}) 
      * fullInfo {boolean}: Whether or not to display extra information
      */
 
-    const [playlistCards, setPlaylistCards] = useState([]);
-
-    useEffect(() => {
-        setPlaylistCards(playlists.map(playlistData => {
-            return <Playlist 
-                key={playlistData.uri}
-                playlist={playlistData}
-                topRight={(createTopRight !== null) ? createTopRight(playlistData) : null}
-                fullInfo={fullInfo}
-            />;
-        }))
-    }, [playlists, createTopRight, fullInfo])
+    const playlistCards = playlists.map(playlistData => {
+        return <Playlist 
+            key={playlistData.uri}
+            playlist={playlistData}
+            topRight={(createTopRight !== null) ? createTopRight(playlistData) : null}
+            fullInfo={fullInfo}
+        />;
+    });
 
     return (
         <StyledVStack {...style}>

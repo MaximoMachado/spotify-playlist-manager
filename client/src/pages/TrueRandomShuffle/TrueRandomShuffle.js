@@ -20,7 +20,7 @@ function TrueRandomShuffle() {
                 console.error(err);
                 if (err.response.status === 401) history.push('/');
             })
-    }, [])
+    }, [history])
 
     const handleCreatePlaylist = (playlist) => {
         axios.post(`${process.env.REACT_APP_API_URL}/tools/true-random-shuffle`, { uri: playlist.uri, name: playlist.name }, { withCredentials: true })
