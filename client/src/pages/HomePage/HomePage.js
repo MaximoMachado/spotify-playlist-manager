@@ -25,7 +25,7 @@ function HomePage() {
                         Log In With Spotify
                     </Button>
                     <Text textAlign='center'> 
-                        Maximo Machado | maximo@mit.edu | <ExternalHyperLink href='https://github.com/MaximoMachado/spotify-playlist-manager'>Github Repo</ExternalHyperLink>
+                        Maximo Machado | maximo@alum.mit.edu | <ExternalHyperLink href='https://github.com/MaximoMachado/spotify-playlist-manager'>Github Repo</ExternalHyperLink>
                     </Text>
                 </VStack>
             </Flex>
