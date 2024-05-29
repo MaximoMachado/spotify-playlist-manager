@@ -12,6 +12,10 @@ function Playlists({ playlists, createTopRight=null, fullInfo=false, ...style}) 
      */
 
     const playlistCards = playlists.map(playlistData => {
+        if (playlistData.images === null) {
+            // Spotify Web API does not document that playlist images may be null in some circumstances
+            playlistData.images = [];
+        }
         return <Playlist 
             key={playlistData.uri}
             playlist={playlistData}
