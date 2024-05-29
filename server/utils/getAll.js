@@ -48,7 +48,17 @@ async function* getAll(spotifyApiFunc, id, limit, accessToken) {
      * Params:
      * accessToken {str}: Access Token provided by user authentication
      */
+    
+    let seenUris = new Set();
+
     for await (let playlist of getAll('getUserPlaylists', null, 50, accessToken)) {
+        if (seenUris.has(playlist.uri)) {
+            // Spotify's API can mistakenly give the same playlist twice so we must filter it out in our backend
+            continue;
+        }
+
+        seenUris.add(playlist.uri);
+
         playlist.name = he.decode(playlist.name);
         playlist.description = he.decode(playlist.description);
         yield playlist;
