@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Card } from '../Card/Card';
 
 function Playlist({ playlist, topRight, fullInfo=false, ...style}) {
@@ -10,26 +9,19 @@ function Playlist({ playlist, topRight, fullInfo=false, ...style}) {
      * fullInfo {boolean}: Whether or not to display extra information
      */
 
-    const [asideText, setAsideText] = useState('');
-    const [externalUrl, setExternalUrl] = useState('');
+    const externalUrl = (playlist.external_urls !== undefined) ? playlist.external_urls : '';
 
-    useEffect(() => {
-        console.log(playlist)
-        if (playlist.external_urls !== undefined) {
-            setExternalUrl(playlist.external_urls.spotify);
+    let asideText = '';
+    if (playlist.owner !== undefined) {
+        asideText += `Created by ${playlist.owner.display_name}`;
+    }
+
+    if (playlist.tracks !== undefined) {
+        if (asideText.length > 0) {
+            asideText += ' | ';
         }
-
-        let text = '';
-        if (playlist.owner !== undefined) {
-            text += `Created by ${playlist.owner.display_name}`;
-        }
-
-        if (playlist.tracks !== undefined) {
-            text += ` | ${playlist.tracks.total} Songs`;
-        }
-
-        setAsideText(text);
-    }, [playlist])
+        asideText += `${playlist.tracks.total} Songs`;
+    }
 
     return (
         <Card
