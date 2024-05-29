@@ -19,8 +19,10 @@ async function* getAllPages(spotifyApiFunc, id, limit, accessToken) {
             total = data.body.total;
         }
 
-        yield items;
         offset += limit;
+        if (items !== null) {
+            yield items;
+        }
     } while (total === null || offset < total);
 }
 
