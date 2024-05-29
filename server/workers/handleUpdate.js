@@ -57,7 +57,7 @@ insertDb.process(async (job) => {
                     trackDetailsArray.push(artists[0].name);
                 } else if (type === "episode") {
                     trackDetailsArray.push(1);
-                    trackDetailsArray.push(track.show.name);
+                    trackDetailsArray.push("");
                 }
 
                 trackDetailsStatement += ` ($${detailsIndex}, $${detailsIndex + 1}, $${detailsIndex + 2}, $${detailsIndex + 3}, $${detailsIndex + 4}),`;
