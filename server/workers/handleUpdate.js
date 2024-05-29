@@ -19,9 +19,10 @@ insertDb.process(async (job) => {
      * user {object}: User to update within database
      * accessToken {str}: Access Token from Spotify for User
      */
-    console.log(`Insert Db Started:`);
     
     const { user, accessToken } = job.data;
+
+    console.log(`${new Date().toLocaleString()} -- Insert Db Started (${user}):`);
     try {
         await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3, ready=false', [user.uri, new Date(), new Date()]);
         
@@ -88,7 +89,7 @@ insertDb.process(async (job) => {
         // Unready user since data was unable to be stored correctly.
         await db.query('UPDATE public.user SET ready=false WHERE uri = $1', [user.uri]);
     }
-    console.log('Insert Db Ended');
+    console.log(`${new Date().toLocaleString()} -- Insert Db Ended (${user})`);
 });
 
 modifyDb.process(async (job) => {
@@ -101,9 +102,10 @@ modifyDb.process(async (job) => {
      * user {object}: User to update within database
      * accessToken {str}: Access Token from Spotify for User
      */
-    console.log(`Modify Db Started:`);
-    
+
     const { user, accessToken } = job.data;
+    console.log(`${new Date().toLocaleString()} -- Modify Db Started (${user}):`);
+    
     try {
         await db.query('UPDATE public.user SET last_updated=$1 WHERE uri=$2', [new Date(), user.uri]);
 
@@ -121,7 +123,7 @@ modifyDb.process(async (job) => {
     } catch (err) {
         console.error(err);
     }
-    console.log('Modify Db Ended');
+    console.log(`${new Date().toLocaleString()} -- Modify Db Ended (${user})`);
 });
 
 handleUpdateQueue.process(async (job) => {
@@ -139,7 +141,7 @@ handleUpdateQueue.process(async (job) => {
      * accessToken {str}: Access Token from Spotify for User
      */
 
-    console.log(`Handle Update Started:`);
+    console.log(`${new Date().toLocaleString()} -- Handle Update Started:`);
     try {
         const { accessToken } = job.data;
         const spotifyApi = new SpotifyWebApi({
@@ -180,7 +182,7 @@ addPlaylistQueue.process(async (job) => {
      * trackUris {arr[str]}: Uris of tracks that are within the playlist
      */
     const { userUri, playlistUri, trackUris, } = job.data;
-    console.log(`Add Playlist Started:\nUser: ${userUri} | Playlist: ${playlistUri} | Track #: ${trackUris.length}`);
+    console.log(`${new Date().toLocaleString()} -- Add Playlist Started:\nUser: ${userUri} | Playlist: ${playlistUri} | Track #: ${trackUris.length}`);
     try {
         let statement = 'INSERT INTO public.user_saved_playlist(user_uri, playlist_uri) VALUES($1, $2) ON CONFLICT (user_uri, playlist_uri) DO NOTHING';
         await db.query(statement, [userUri, playlistUri]);
@@ -199,6 +201,7 @@ addPlaylistQueue.process(async (job) => {
             statement = statement.slice(0, -1) + ' ON CONFLICT (playlist_uri, track_uri) DO NOTHING';
             await db.query(statement, values);
         }
+        console.log(`${new Date().toLocaleString()} -- Add Playlist Success:\nUser: ${userUri} | Playlist: ${playlistUri} | Tracks inserted: ${values.length / 2}`);
     } catch (err) {
         console.error(err);
     }
