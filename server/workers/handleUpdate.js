@@ -38,7 +38,11 @@ insertDb.process(async (job) => {
             let detailsIndex = 1;
             for await (let playlistTrack of getPlaylistTracks(playlist.id, accessToken)) {
                 const { track } = playlistTrack;
-                const { uri, name, artists, duration_ms } = track;
+                const { uri, name, artists, duration_ms, type } = track;
+                if (type !== "track" && type !== "episode") {
+                    // To prevent bugs from new Spotify API playlist item types, skip over unhandled types
+                    continue;
+                }
                 tracksArray.push(playlist.uri);
                 tracksArray.push(track.uri);
 
@@ -48,8 +52,13 @@ insertDb.process(async (job) => {
                 trackDetailsArray.push(uri);
                 trackDetailsArray.push(name);
                 trackDetailsArray.push(duration_ms);
-                trackDetailsArray.push(artists.length);
-                trackDetailsArray.push(artists[0].name);
+                if (type === "track") {
+                    trackDetailsArray.push(artists.length);
+                    trackDetailsArray.push(artists[0].name);
+                } else if (type === "episode") {
+                    trackDetailsArray.push(1);
+                    trackDetailsArray.push(track.show.name);
+                }
 
                 trackDetailsStatement += ` ($${detailsIndex}, $${detailsIndex + 1}, $${detailsIndex + 2}, $${detailsIndex + 3}, $${detailsIndex + 4}),`;
 
