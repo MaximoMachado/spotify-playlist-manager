@@ -22,7 +22,7 @@ insertDb.process(async (job) => {
     
     const { user, accessToken } = job.data;
 
-    console.log(`${new Date().toLocaleString()} -- Insert Db Started (${user}):`);
+    console.log(`${new Date().toLocaleString()} -- Insert Db Started (${user.uri}):`);
     try {
         await db.query('INSERT INTO public.user(uri, last_updated) VALUES($1, $2) ON CONFLICT (uri) DO UPDATE SET last_updated=$3, ready=false', [user.uri, new Date(), new Date()]);
         
@@ -89,7 +89,7 @@ insertDb.process(async (job) => {
         // Unready user since data was unable to be stored correctly.
         await db.query('UPDATE public.user SET ready=false WHERE uri = $1', [user.uri]);
     }
-    console.log(`${new Date().toLocaleString()} -- Insert Db Ended (${user})`);
+    console.log(`${new Date().toLocaleString()} -- Insert Db Ended (${user.uri})`);
 });
 
 modifyDb.process(async (job) => {
@@ -104,7 +104,7 @@ modifyDb.process(async (job) => {
      */
 
     const { user, accessToken } = job.data;
-    console.log(`${new Date().toLocaleString()} -- Modify Db Started (${user}):`);
+    console.log(`${new Date().toLocaleString()} -- Modify Db Started (${user.uri}):`);
     
     try {
         await db.query('UPDATE public.user SET last_updated=$1 WHERE uri=$2', [new Date(), user.uri]);
@@ -123,7 +123,7 @@ modifyDb.process(async (job) => {
     } catch (err) {
         console.error(err);
     }
-    console.log(`${new Date().toLocaleString()} -- Modify Db Ended (${user})`);
+    console.log(`${new Date().toLocaleString()} -- Modify Db Ended (${user.uri})`);
 });
 
 handleUpdateQueue.process(async (job) => {
