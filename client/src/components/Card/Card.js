@@ -15,17 +15,11 @@ function Card({ headerText, description, asideText, images, externalUrl, topRigh
      * fullInfo {boolean}: Whether card displays description, asideText, and image
      */
     
-    const [srcSet, setSrcSet] = useState('');
+    const srcSet = images.map(image => {
+            const imageWidth = (image.width !== null) ? ` ${image.width}w` : '';
 
-    useEffect(() => {
-        const formattedSrcSet = images.map(image => {
-                const imageWidth = (image.width !== null) ? ` ${image.width}w` : '';
-
-                return `${image.url}${imageWidth}`
-            }).join(', ');
-
-        setSrcSet(formattedSrcSet);
-    }, [images])
+            return `${image.url}${imageWidth}`
+        }).join(', ');
 
     // TODO Add optional children prop to allow for buttons to be available on card
     return (
