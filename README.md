@@ -108,3 +108,7 @@ I just wanted to thank a couple people for helping debug and test the website as
 - Edward McKeown
 - Josh Barbell
 - Ryan McLaughlin
+
+# Attribution
+- Music icon by HAZHA FARASYA from <a href="https://thenounproject.com/browse/icons/term/music/" target="_blank" title="Music Icons">Noun Project</a> (CC BY 3.0)
+
