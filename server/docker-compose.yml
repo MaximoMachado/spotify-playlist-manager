@@ -14,7 +14,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - REDIS_URL=redis://spm-redis
+      - REDIS_URL=redis://queue
     volumes:
       # Maps our current project directory `.` to
       # our working directory in the container
